@@ -2,9 +2,8 @@
 
 int main()
 {
-    int c ; 
-    c = (getchar() != EOF);
-    printf("c = %d\n",c);
-    if (EOF == -1)
-        printf("assholes");
+    printf("To see that getchar() != EOF = 1, enter any character.\n");
+    printf("To see that getchar() != EOF = 0, enter CTRL-Z.\n");
+    int c = (getchar() != EOF);
+    printf("getchar() != EOF = %d", c);
 }

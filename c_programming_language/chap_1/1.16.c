@@ -19,7 +19,7 @@ int main()
         }
 
     if (max > 0){
-        printf("Max sentence length is  %d.\n", max);
+        printf("Max input length is  %d.\n", max);
         printf("%s", longest);
     }
     return 0;

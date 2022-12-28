@@ -15,22 +15,33 @@ int main()
 
 int entab(char s[], int lim)
 {
-    int c, i,j;
+    int c, i;
+    i = 0;
     int tab_count = 0;
-    for(i = 0 ; (i < lim-1) && (c=getchar()) != EOF && c != '\n' ; ++i)
-        if (c == '\t'){
-            tab_count = tab_count % TABSTOP;
-            tab_count = TABSTOP - tab_count;
-            for(; tab_count != 0; --tab_count){
-                s[i] = ' ';
-                if (tab_count != 1)
-                    ++i;
-            }
-        }
+    int space_count = 0;
+    while(i < lim-1 && (c=getchar()) != EOF && c != '\n'){
+        if (c == ' ')
+            ++space_count;
         else{
+            if(space_count != 0){
+                tab_count = tab_count % TABSTOP;
+                if (space_count ==  TABSTOP - tab_count){
+                    s[i] = '\t';
+                    ++i;
+                }
+                else 
+                    for(; space_count != 0; --space_count){
+                        s[i] = ' ';
+                        ++i;
+                    }
+                space_count = 0;
+            }
             ++tab_count;
             s[i] = c;
+            ++i;
         }
+
+    }
     if (c == '\n'){
         s[i] = c;
         ++i;

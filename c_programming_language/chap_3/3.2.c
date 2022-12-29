@@ -42,9 +42,9 @@ int getlines(char s[], int lim)
 
 void escape(char from[], char to[])
 {
-    int from_counter = 0;
-    int to_counter = 0;
-    while ( from[from_counter] != '\0'){
+    int from_counter, to_counter;
+    from_counter = to_counter = 0;
+    while (from[from_counter] != '\0')
         switch(from[from_counter]){
             case '\n':
                 to[to_counter] = '\\';
@@ -66,15 +66,14 @@ void escape(char from[], char to[])
                 ++from_counter;
                 break;
         }
-    }
     to[to_counter] = from[from_counter];
 }
 
 void escape_reversal(char from[], char to[])
 {
-    int from_counter = 0;
-    int to_counter = 0;
-    while ( from[from_counter] != '\0'){
+    int from_counter, to_counter;
+    from_counter = to_counter = 0;
+    while (from[from_counter] != '\0')
         switch(from[from_counter]){
             case 'n':
                 if (from[from_counter-1] == '\\'){
@@ -94,6 +93,5 @@ void escape_reversal(char from[], char to[])
                 ++from_counter;
                 break;
         }
-    }
     to[to_counter] = from[from_counter];
 }

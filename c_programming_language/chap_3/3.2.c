@@ -19,7 +19,6 @@ int main()
             printf("\nLine after escape: \n%s\n", line_escaped);
             escape_reversal(line, line_escaped);
             printf("\nLine after escape reversal: \n%s\n", line_escaped);
-
         }
 
     return 0;

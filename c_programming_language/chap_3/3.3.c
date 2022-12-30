@@ -13,13 +13,15 @@ void expand(char s1[], char s2[]);
 
 int main()
 {
-    // char s1[] = "a-c-b"; // tight corner check this case.
+    // char s1[] = "a-z";
     // char s1[] = "a-b-c";
+    char s1[] = "a-z0-9";
     // char s1[] = "-a-z";
     // char s1[] = "-a-z2-9";
-    // char s1[] = "-a-z-8"; // Really dumb case, should be aabcdefghijklmnopqrstuvwxyzz8
     // char s1[] = "-Ba-w1-";
-    // char s1[] = "a--B";
+    // char s1[] = "a-c-b"; // tight corner check this case.
+    // char s1[] = "-a-z-8"; // Really dumb case, should be aabcdefghijklmnopqrstuvwxyzz8
+    // char s1[] = "a--B"; // Dumb Case
     // char s1[] = "a--B-"; // Really, really dumb case, should be abcdefghijklmnopqrstuvwxyzABBCDEFGHIJKLMNOPQRSTUVWXYZ
 
     char s2[MAXLINE];
@@ -62,7 +64,6 @@ void expand(char s1[], char s2[]){
                 else {
                     hold_max = s1[i+1];
                     hold_min = s1[i-1];
-                    printf("here' with hold_min %c\thold_max %c\n", hold_min, hold_max);
                     if (hold_min >= NUMERIC_MIN && hold_min <= NUMERIC_MAX && hold_max >= NUMERIC_MIN && hold_max <= NUMERIC_MAX){
                         if (hold_min > hold_max)
                             hold_max = NUMERIC_MAX;
@@ -110,7 +111,6 @@ void expand(char s1[], char s2[]){
             s2[j] = s1[i];
             ++j;
         }
-    // printf("%s\n",s2);
     if (s2[j-1] != s1[i-1] && s1[i-1] != '-'){
         s2[j] = s1[i-1];
         ++j;

@@ -2,12 +2,18 @@
 #include <string.h>
 
 #define MAXLINE 1000
+#define NUMERIC_MIN 48
+#define NUMERIC_MAX 57
+#define UPPERCASE_MIN 65
+#define UPPERCASE_MAX 90
+#define LOWERCASE_MIN 97
+#define LOWERCASE_MAX 122
 
 void expand(char s1[], char s2[]);
 
 int main()
 {
-    char s1[] = "a-zass0-9";
+    char s1[] = "-b-Z";
     char s2[MAXLINE];
     printf("%s\n", s1);
     expand(s1,s2);
@@ -25,25 +31,36 @@ void expand(char s1[], char s2[]){
             if (i == 0){
                 hold_min = s1[i+1];
                 hold_max = hold_min;
-                if (hold_min >= 48 && hold_min <= 57)
-                    hold_min = 48;
-                else if (hold_min >= 65 && hold_min <= 90)
-                    hold_min = 65;
-                else if (hold_min >= 97 && hold_min <= 122)
-                    hold_min = 97;
+                if (hold_min >= NUMERIC_MIN && hold_min <= NUMERIC_MAX)
+                    hold_min = NUMERIC_MIN;
+                else if (hold_min >= UPPERCASE_MIN && hold_min <= UPPERCASE_MAX)
+                    hold_min = UPPERCASE_MIN;
+                else if (hold_min >= LOWERCASE_MIN && hold_min <= LOWERCASE_MAX)
+                    hold_min = LOWERCASE_MIN;
             }
             else if (i != strlen(s1)-1){
                 hold_min = s1[i-1];
                 hold_max = s1[i+1];
+                if      (hold_min >= NUMERIC_MIN && hold_min <= NUMERIC_MAX && hold_max >= NUMERIC_MIN && hold_max <= NUMERIC_MAX){}
+                else if (hold_min >= UPPERCASE_MIN && hold_min <= UPPERCASE_MAX && hold_max >= UPPERCASE_MIN && hold_max <= UPPERCASE_MAX){}
+                else if (hold_min >= LOWERCASE_MIN && hold_min <= LOWERCASE_MAX && hold_max >= LOWERCASE_MIN && hold_max <= LOWERCASE_MAX){}
+                else {
+                    if (hold_min >= NUMERIC_MIN && hold_min <= NUMERIC_MAX)
+                        hold_max = NUMERIC_MAX;
+                    else if (hold_min >= UPPERCASE_MIN && hold_min <= UPPERCASE_MAX)
+                        hold_max = UPPERCASE_MAX;
+                    else if (hold_min >= LOWERCASE_MIN && hold_min <= LOWERCASE_MAX)
+                        hold_max = LOWERCASE_MAX;
+                }
             }
             else if (i == strlen(s1)-1){
                 hold_min = s1[i-1];
-                if (hold_min >= 48 && hold_min <= 57)
-                    hold_max = 57;
-                else if (hold_min >= 65 && hold_min <= 90)
-                    hold_max = 90;
-                else if (hold_min >= 97 && hold_min <= 122)
-                    hold_max = 122;
+                if (hold_min >= NUMERIC_MIN && hold_min <= NUMERIC_MAX)
+                    hold_max = NUMERIC_MAX;
+                else if (hold_min >= UPPERCASE_MIN && hold_min <= UPPERCASE_MAX)
+                    hold_max = UPPERCASE_MAX;
+                else if (hold_min >= LOWERCASE_MIN && hold_min <= LOWERCASE_MAX)
+                    hold_max = LOWERCASE_MAX;
             }
             while (hold_min <= hold_max){
                 s2[j] = hold_min;

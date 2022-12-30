@@ -12,5 +12,13 @@ int main()
 
     char b[] = "8letters";
     printf("%d\n", strlen(b));
+
+    int min = 3; 
+    int max = 6;
+    if (min == 3)
+        max = 7;
+    else if (max == 7)
+        min = 2;
+    printf("min %d \t max %d", min , max);
     return 0;
 }

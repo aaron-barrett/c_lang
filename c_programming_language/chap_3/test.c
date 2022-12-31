@@ -19,6 +19,10 @@ int main()
         max = 7;
     else if (max == 7)
         min = 2;
+    printf("min %d \t max %d\n", min , max);
+
+    min = max++;
+    printf("min = max++ result\n");
     printf("min %d \t max %d", min , max);
     return 0;
 }

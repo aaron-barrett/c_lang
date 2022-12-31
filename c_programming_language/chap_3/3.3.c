@@ -2,20 +2,14 @@
 #include <string.h>
 
 #define MAXLINE 1000
-#define NUMERIC_MIN 48
-#define NUMERIC_MAX 57
-#define UPPERCASE_MIN 65
-#define UPPERCASE_MAX 90
-#define LOWERCASE_MIN 97
-#define LOWERCASE_MAX 122
 
 void expand(char s1[], char s2[]);
 
 int main()
 {
-    // char s1[] = "a-z";
+    char s1[] = "a-z";
     // char s1[] = "a-b-c";
-    char s1[] = "a-z0-9";
+    // char s1[] = "a-z0-9";
     // char s1[] = "-a-z";
     // char s1[] = "-a-z2-9";
     // char s1[] = "-Ba-w1-";
@@ -23,7 +17,6 @@ int main()
     // char s1[] = "-a-z-8"; // Really dumb case, should be aabcdefghijklmnopqrstuvwxyzz8
     // char s1[] = "a--B"; // Dumb Case
     // char s1[] = "a--B-"; // Really, really dumb case, should be abcdefghijklmnopqrstuvwxyzABBCDEFGHIJKLMNOPQRSTUVWXYZ
-
     char s2[MAXLINE];
     printf("%s\n", s1);
     expand(s1,s2);
@@ -41,79 +34,73 @@ void expand(char s1[], char s2[]){
             if (i == 0){
                 hold_min = s1[i+1];
                 hold_max = hold_min;
-                if (hold_min >= NUMERIC_MIN && hold_min <= NUMERIC_MAX)
-                    hold_min = NUMERIC_MIN;
-                else if (hold_min >= UPPERCASE_MIN && hold_min <= UPPERCASE_MAX)
-                    hold_min = UPPERCASE_MIN;
-                else if (hold_min >= LOWERCASE_MIN && hold_min <= LOWERCASE_MAX)
-                    hold_min = LOWERCASE_MIN;
+                if (hold_min >= '0' && hold_min <= '9')
+                    hold_min = '0';
+                else if (hold_min >= 'A' && hold_min <= 'Z')
+                    hold_min = 'A';
+                else if (hold_min >= 'a' && hold_min <= 'z')
+                    hold_min = 'a';
                 else 
                     printf("should not get here.\n");
             }
-            else if (i != strlen(s1)-1){
+            else if (i != (strlen(s1)-1)){
                 if (s1[i-1] == '-'){
                     hold_max = s1[i+1];
                     hold_min = -1;
-                    if (hold_max >= NUMERIC_MIN && hold_max <= NUMERIC_MAX)
-                        hold_min = NUMERIC_MIN;
-                    if (hold_max >= UPPERCASE_MIN && hold_max <= UPPERCASE_MAX)
-                        hold_min = UPPERCASE_MIN;
-                    if (hold_max >= LOWERCASE_MIN && hold_max <= LOWERCASE_MAX)
-                        hold_min = LOWERCASE_MIN;
+                    if (hold_max >= '0' && hold_max <= '9')
+                        hold_min = '0';
+                    if (hold_max >= 'A' && hold_max <= 'Z')
+                        hold_min = 'A';
+                    if (hold_max >= 'a' && hold_max <= 'z')
+                        hold_min = 'a';
                 }
                 else {
                     hold_max = s1[i+1];
                     hold_min = s1[i-1];
-                    if (hold_min >= NUMERIC_MIN && hold_min <= NUMERIC_MAX && hold_max >= NUMERIC_MIN && hold_max <= NUMERIC_MAX){
+                    if (hold_min >= '0' && hold_min <= '9' && hold_max >= '0' && hold_max <= '9'){
                         if (hold_min > hold_max)
-                            hold_max = NUMERIC_MAX;
+                            hold_max = '9';
                     }
-                    else if (hold_min >= UPPERCASE_MIN && hold_min <= UPPERCASE_MAX && hold_max >= UPPERCASE_MIN && hold_max <= UPPERCASE_MAX){
+                    else if (hold_min >= 'A' && hold_min <= 'Z' && hold_max >= 'A' && hold_max <= 'Z'){
                         if (hold_min > hold_max)
-                            hold_max = UPPERCASE_MAX;
+                            hold_max = 'Z';
                     }
-                    else if (hold_min >= LOWERCASE_MIN && hold_min <= LOWERCASE_MAX && hold_max >= LOWERCASE_MIN && hold_max <= LOWERCASE_MAX){
+                    else if (hold_min >= 'a' && hold_min <= 'z' && hold_max >= 'a' && hold_max <= 'z'){
                         if (hold_min > hold_max)
-                            hold_max = LOWERCASE_MAX;
+                            hold_max = 'z';
                     }
                     else {
-                        if (hold_min >= NUMERIC_MIN && hold_min <= NUMERIC_MAX)
-                            hold_max = NUMERIC_MAX;
-                        if (hold_min >= UPPERCASE_MIN && hold_min <= UPPERCASE_MAX)
-                            hold_max = UPPERCASE_MAX;
-                        if (hold_min >= LOWERCASE_MIN && hold_min <= LOWERCASE_MAX)
-                            hold_max = LOWERCASE_MAX;
+                        if (hold_min >= '0' && hold_min <= '9')
+                            hold_max = '9';
+                        if (hold_min >= 'A' && hold_min <= 'Z')
+                            hold_max = 'Z';
+                        if (hold_min >= 'a' && hold_min <= 'z')
+                            hold_max = 'z';
                     }
                 }                    
             }
-            else if (i == strlen(s1)-1){
+            else if (i == (strlen(s1)-1)){
                 hold_min = s1[i-1];
-                if (hold_min >= NUMERIC_MIN && hold_min <= NUMERIC_MAX)
-                    hold_max = NUMERIC_MAX;
-                else if (hold_min >= UPPERCASE_MIN && hold_min <= UPPERCASE_MAX)
-                    hold_max = UPPERCASE_MAX;
-                else if (hold_min >= LOWERCASE_MIN && hold_min <= LOWERCASE_MAX)
-                    hold_max = LOWERCASE_MAX;
+                if (hold_min >= '0' && hold_min <= '9')
+                    hold_max = '9';
+                else if (hold_min >= 'A' && hold_min <= 'Z')
+                    hold_max = 'Z';
+                else if (hold_min >= 'a' && hold_min <= 'z')
+                    hold_max = 'z';
                 else 
                     printf("should not get here.\n");
             }
-            while (hold_min <= hold_max){
-                s2[j] = hold_min;
-                ++j;
-                ++hold_min;
-            }
+            while (hold_min <= hold_max)
+                s2[j++] = hold_min++;
         }
         else{
             if (s1[i-1] == '-' && i > 0)
                 continue;
             if (s1[i+1] == '-' && i < strlen(s1)-1)
                 continue;
-            s2[j] = s1[i];
-            ++j;
+            s2[j++] = s1[i];
         }
-    if (s2[j-1] != s1[i-1] && s1[i-1] != '-'){
-        s2[j] = s1[i-1];
-        ++j;
-    }
+    if (s2[j-1] != s1[i-1] && s1[i-1] != '-')
+        s2[j++] = s1[i-1];
     s2[j] = '\0';
 }

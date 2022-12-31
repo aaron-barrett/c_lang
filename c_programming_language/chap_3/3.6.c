@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include<string.h>
+#include <string.h>
 #include <limits.h>
 #define MAXLINE 1000
 
@@ -39,10 +39,10 @@ void itoa(int n, char s[], int field_width)
 
 int main()
 {
-    int n = 521;
     int field_width = 6;
+    // int n = 521;
     // int n = -2147483647;
-    // int n = -2147483648;
+    int n = INT_MIN;
     char s[MAXLINE];
     itoa(n, s, field_width);
     printf("%d to string: %s\n",n, s);

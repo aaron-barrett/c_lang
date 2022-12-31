@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include<string.h>
+#include <string.h>
 #include <limits.h>
 #define MAXLINE 1000
 
@@ -51,7 +51,7 @@ void itob(int n, int b, char s[])
 int main()
 {
     int n = 5211;
-    // int n = -2147483648;
+    // int n = INT_MIN;
     int b = 11;
     char s[MAXLINE];
     itob(n, b, s);

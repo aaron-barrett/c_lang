@@ -39,7 +39,7 @@ int main()
 {
     int n = 521;
     // int n = -2147483647;
-    // int n = -2147483648;
+    // int n = INT_MIN;
     char s[MAXLINE];
     itoa(n,s);
     printf("%d to string: %s\n",n, s);

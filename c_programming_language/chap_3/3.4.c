@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include<string.h>
+#include <string.h>
 #include <limits.h>
 #define MAXLINE 1000
 

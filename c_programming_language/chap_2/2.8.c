@@ -49,7 +49,7 @@ unsigned obtain_max_bits_of_int()
     return count;
 }
 
-int rightrot(unsigned x, int n)
+int rightrot(unsigned x, unsigned n)
 {
     unsigned INT_BITS = obtain_max_bits_of_int();
     return ( x >> n) | (x << INT_BITS-n);

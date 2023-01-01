@@ -15,7 +15,7 @@ void reverse(char s[])
 
 void itob(int n, int b, char s[])
 {
-    if (b < 1 || b > 36){
+    if (b < 2 || b > 36){
         printf("Base is out of range for base: %d", b);
         return ;
     }

@@ -27,5 +27,6 @@ int main()
     printf("double min: %f \t double max: %f\n", double_min, double_max);
     printf("long double min: %f \t long double max: %f\n", long_double_min, long_double_max);
 
+    // TODO: Compute these directly to finish the exercise. Use the size of each type and use binary operations?
     return 0;
 }

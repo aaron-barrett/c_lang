@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define MAXLINE 1000
+// #define INT_BITS 32
 
 void reverse(char s[])
 {
@@ -37,31 +38,33 @@ void itob(unsigned n, int b, char s[])
     reverse(s);
 }
 
-int setbits(unsigned x, int p, int n, unsigned y)
+unsigned obtain_max_bits_of_int()
 {
-    char s[MAXLINE];
-    unsigned z = (~(y >> (p-n+1)) & ~((~0 << n)));
-    z = z << (p-n+1);
-    y = (y >> (p-n+1)) & (~(~0 << n));
-    y = y << (p-n+1);
-    x = x | y ;
-    x = x ^ z;
-    return x;
+    int hold = INT_MAX;
+    int count = 0;
+    while(hold){
+        count++;
+        hold = hold << 1;
+    }
+    return count;
+}
+
+int rightrot(unsigned x, int n)
+{
+    unsigned INT_BITS = obtain_max_bits_of_int();
+    return ( x >> n) | (x << INT_BITS-n);
 }
 
 int main()
 {
-    unsigned x = 0b1111101;// 0b not necessarily in the standard
-    int p = 4; 
-    int n = 2;
-    unsigned y = 0b1110011;
-    unsigned result = setbits(x,p,n,y);
+    unsigned x = 0b1110111; // 0b not necessarily in the standard
+    int n = 3;
+    unsigned result = rightrot(x,n);
     char s1[MAXLINE];
     char s2[MAXLINE];
-    char s3[MAXLINE];
     itob(x, 2, s1);
-    itob(y, 2, s2);
-    itob(result, 2, s3);
-    printf("x = %s\ty = %s \tresult = %s\n",s1,s2,s3);
+    itob(result, 2, s2);
+    printf("x = %s\tresult = %s\n",s1,s2);
+    int count = 0;
     return 0;
 }

@@ -37,31 +37,28 @@ void itob(unsigned n, int b, char s[])
     reverse(s);
 }
 
-int setbits(unsigned x, int p, int n, unsigned y)
+int invert(unsigned x, int p, int n)
 {
-    char s[MAXLINE];
-    unsigned z = (~(y >> (p-n+1)) & ~((~0 << n)));
+    unsigned z = ((x >> (p-n+1)) & ~((~0 << n)));
     z = z << (p-n+1);
-    y = (y >> (p-n+1)) & (~(~0 << n));
+    z = ~z;
+    unsigned y = (~(x >> (p-n+1)) & (~(~0 << n)));
     y = y << (p-n+1);
-    x = x | y ;
-    x = x ^ z;
+    x = x & z;
+    x = x ^ y;
     return x;
 }
 
 int main()
 {
-    unsigned x = 0b1111101;// 0b not necessarily in the standard
+    unsigned x = 0b1110111; // 0b not necessarily in the standard
     int p = 4; 
-    int n = 2;
-    unsigned y = 0b1110011;
-    unsigned result = setbits(x,p,n,y);
+    int n = 3;
+    unsigned result = invert(x,p,n);
     char s1[MAXLINE];
     char s2[MAXLINE];
-    char s3[MAXLINE];
     itob(x, 2, s1);
-    itob(y, 2, s2);
-    itob(result, 2, s3);
-    printf("x = %s\ty = %s \tresult = %s\n",s1,s2,s3);
+    itob(result, 2, s2);
+    printf("x = %s\tresult = %s\n",s1,s2);
     return 0;
 }

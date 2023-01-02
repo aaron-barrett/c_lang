@@ -26,7 +26,10 @@ double atof_(char s[])
         if (isdigit(s[i]))
             exponent = (s[i] - '0');
         while (exponent){
-            val /= 10.0;
+            if (exponent_sign < 0)
+                power *= 10.0;
+            else 
+                power /= 10.0;
             exponent--;
         }
     }
@@ -35,9 +38,9 @@ double atof_(char s[])
 
 int main()
 {
-    // char number[] = "199.90";
+    char number[] = "199.90";
     // char number[] = "123.45e-6";
-    char number[] = "11.23e2";
+    // char number[] = "11.23e2";
     double  atof_(char []);
     printf("%s to double is %1.8f.\n", number, atof_(number));
     return 0;

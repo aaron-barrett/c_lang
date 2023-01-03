@@ -7,7 +7,7 @@
 int getop(char []);
 void push(double);
 double pop(void);
-
+void print_stack();
 int main()
 {
     int type;
@@ -26,6 +26,7 @@ int main()
                 push(pop() * pop());
                 break;
             case '-':
+                op2 = pop();
                 push(pop() - op2);
                 break;
             case '/':
@@ -69,6 +70,7 @@ double pop(void)
 #include <ctype.h>
 int getch(void);
 void ungetch(int);
+/* geto: get next operator or numeric operand */
 int getop(char s[])
 {
     int i, c;
@@ -93,7 +95,7 @@ int getop(char s[])
 #define BUFSIZE 100
 char buf[BUFSIZE];  /* buffer for ungetch */
 int bufp = 0;       /* next free position in buf */
-int getch(void) /* get a (possibly pushed back) character */
+int getch(void)     /* get a (possibly pushed back) character */
 {
     return (bufp > 0) ? buf[--bufp] : getchar();
 }

@@ -8,6 +8,8 @@ int getop(char []);
 void push(double);
 double pop(void);
 void print_stack();
+void print_buf();
+
 int main()
 {
     int type;
@@ -42,6 +44,8 @@ int main()
             default:
                 printf("error: unknown command %s\n",s);
         }
+        // print_stack();
+        // print_buf();
     }
     return 0;
 }
@@ -106,4 +110,21 @@ void ungetch(int c) /* push character back to input */
         printf("ungetch: too many characters\n");
     else 
         buf[bufp++] = c;
+}
+
+/* prints for debugging */
+void print_stack()
+{
+    printf("Stack: ");
+    for(int i = 0 ; i < sp; i++)
+        printf("%f ", val[i]);
+    printf("\tEnd stack\n");
+}
+
+void print_buf()
+{
+    printf("Buffer: ");
+    for(int i = 0 ; i < bufp; i++)
+        printf("%c ", buf[i]);
+    printf("\tEnd Buffer\n");
 }

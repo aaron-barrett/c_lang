@@ -184,13 +184,23 @@ int getop(char s[])
 #define BUFSIZE 100
 char buf[BUFSIZE];  /* buffer for ungetch */
 int bufp = 0;       /* next free position in buf */
+void print_buf()
+{
+    printf("Buffer: ");
+    for(int i = 0 ;i < bufp; i++)
+        printf("%c ", buf[i]);
+    printf("End Buffer.\n");
+}
+
 int getch(void)     /* get a (possibly pushed back) character */
 {
+    print_buf();
     return (bufp > 0) ? buf[--bufp] : getchar();
 }
 
 void ungetch(int c) /* push character back to input */
 {
+    // print_buf();
     if (bufp >= BUFSIZE)
         printf("ungetch: too many characters\n");
     else 

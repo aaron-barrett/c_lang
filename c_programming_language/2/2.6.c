@@ -37,22 +37,21 @@ void itob(unsigned n, int b, char s[])
     reverse(s);
 }
 
+int zero_out_inner_bits(unsigned x, int p, int n){
+    return (x & (~0 << p+1)) | (x & (~(~0 << p-n+1)));
+}
+
 int setbits(unsigned x, int p, int n, unsigned y)
 {
-    char s[MAXLINE];
-    unsigned z = (~(y >> (p-n+1)) & ~((~0 << n)));
-    z = z << (p-n+1);
-    y = (y >> (p-n+1)) & (~(~0 << n));
-    y = y << (p-n+1);
-    x = x | y ;
-    x = x ^ z;
-    return x;
+    y = ((y & (~((~0) << n))) << (p-n+1)) ;
+    unsigned z = zero_out_inner_bits(x,p,n);
+    return z | y;
 }
 
 int main()
 {
     unsigned x = 0b1111101;// 0b not necessarily in the standard
-    int p = 4; 
+    int p = 2; 
     int n = 2;
     unsigned y = 0b1110011;
     unsigned result = setbits(x,p,n,y);

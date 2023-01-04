@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h> /* for atof() */
+#include <float.h>
 
 #define MAXOP 100 
 #define NUMBER '0'
@@ -7,15 +8,14 @@
 int getop(char []);
 void push(double);
 double pop(void);
-void print_stack();
-void print_buf();
+int return_stack_size(void);
 
 int main()
 {
     int type;
     double op2;
     char s[MAXOP];
-
+    int skip_pop = 0;
     while((type = getop(s)) != EOF){
         switch (type){
             case NUMBER:
@@ -38,14 +38,47 @@ int main()
                 else 
                     printf("error: zero divisor\n");
                 break;
+            case '%':
+                op2 = pop();
+                if (op2 < 0)
+                    op2 = -op2;
+                push((int)pop() % (int)op2);
+                break;
+            case 'p':
+                op2 = pop();
+                printf("\t%.8g\n", op2);
+                push(op2);
+                skip_pop = 1;
+                break;
+            case 'd':
+                op2 = pop();
+                push(op2);
+                push(op2);
+                skip_pop = 0;
+                break;
+            case 's':
+                op2 = pop();
+                double op3 = pop();
+                push(op2);
+                push(op3);
+                break;
+            case 'c':
+                while (return_stack_size() != 0)
+                    pop();
+                skip_pop = 1;
+                printf("Stack Cleared.\n");
+                break;
             case '\n':
-                printf("\t%.8g\n", pop());
+                if (skip_pop){
+                    skip_pop = 0;
+                    break;
+                }
+                else 
+                    printf("\t%.8g\n", pop());
                 break;
             default:
                 printf("error: unknown command %s\n",s);
         }
-        // print_stack();
-        // print_buf();
     }
     return 0;
 }
@@ -71,6 +104,11 @@ double pop(void)
     }
 }
 
+int return_stack_size(void)
+{
+    return sp;
+}
+
 #include <ctype.h>
 int getch(void);
 void ungetch(int);
@@ -90,7 +128,6 @@ int getop(char s[])
     if (c == '.')       /* collect fraction part */
         while (isdigit(s[++i] = c = getch()))
             ;
-    // print_buf();
     s[i] = '\0';
     if (c != EOF)
         ungetch(c);
@@ -111,21 +148,4 @@ void ungetch(int c) /* push character back to input */
         printf("ungetch: too many characters\n");
     else 
         buf[bufp++] = c;
-}
-
-/* prints for debugging */
-void print_stack()
-{
-    printf("Stack: ");
-    for(int i = 0 ; i < sp; i++)
-        printf("%f ", val[i]);
-    printf("\tEnd stack\n");
-}
-
-void print_buf()
-{
-    printf("Buffer: ");
-    for(int i = 0 ; i < bufp; i++)
-        printf("%c ", buf[i]);
-    printf("\tEnd Buffer\n");
 }

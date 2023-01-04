@@ -60,7 +60,7 @@ unsigned getbits(unsigned x, int p, int n)
     /* ~0 = all 1's */
     /* ~0 << 3  = all 1's but 3 0's on the far right */
     /* ~(~0 << 3) = all 0's but 3 1's on the far right */
-    /* 0001 1101 & ~(~0 << 3) = 101*/
+    /* 0001 1101 & ~(~0 << 3) = 101 */
 
     // x = (x >> (p-n+1));
     // int y =  (~(~0 << n));

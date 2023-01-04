@@ -3,7 +3,6 @@
 #include <string.h>
 
 #define MAXLINE 1000
-// #define INT_BITS 32
 
 void reverse(char s[])
 {
@@ -38,41 +37,49 @@ void itob(unsigned n, int b, char s[])
     reverse(s);
 }
 
-unsigned obtain_max_bits_of_int()
-{
-    int hold = INT_MAX;
-    int count = 0;
-    while(hold){
-        count++;
-        hold = hold << 1;
-    }
-    return count;
+int zero_out_inner_bits(unsigned x, int p, int n){
+    return (x & (~0 << p+1)) | (x & (~(~0 << p-n+1)));
 }
 
-int rightrot(unsigned x, unsigned n)
+int match_bits(unsigned x, int p, int n, unsigned y)
 {
-    unsigned INT_BITS = obtain_max_bits_of_int();
-    return ( x >> n) | (x << INT_BITS-n);
+    x = zero_out_inner_bits(x,p,n);
+    unsigned z = ~zero_out_inner_bits(~0,p,n);
+    return x | (y & z);
 }
 
-int leftrot(unsigned x, unsigned n)
+int invert(unsigned x, int p, int n)
 {
-    unsigned INT_BITS = obtain_max_bits_of_int();
-    return (x << n) | (x >> INT_BITS - n);
+    unsigned y = zero_out_inner_bits(x,p,n);
+    unsigned z = ~zero_out_inner_bits(~0,p,n);
+    return y | ((~x) & z) ;
 }
 
 int main()
 {
-    unsigned x = 0b1110111; // 0b not necessarily in the standard
-    int n = 3;
-    unsigned result = rightrot(x,n);
+    unsigned x = 0b1110111;
+    unsigned y = 0b110001;
+    // unsigned x = 0b1110111; // 0b not necessarily in the standard
+    int p = 4; 
+    int n = 1;
+    unsigned result = zero_out_inner_bits(x,p,n);
     char s1[MAXLINE];
     char s2[MAXLINE];
     itob(x, 2, s1);
     itob(result, 2, s2);
+    printf("Zero out bits.\n");
     printf("x = %s\tresult = %s\n",s1,s2);
-    result = leftrot(result,n);
+    result = match_bits(x,p,n,y);
+    char s3[MAXLINE];
+    itob(x, 2, s1);
+    itob(y, 2, s2);
+    itob(result,2,s3);
+    printf("Match bits.\n");
+    printf("x = %s\ty = %s\tresult = %s\n",s1,s2,s3);
+    result = invert(x,p,n);
+    itob(x, 2, s1);
     itob(result, 2, s2);
+    printf("Invert bits.\n");
     printf("x = %s\tresult = %s\n",s1,s2);
     return 0;
 }

@@ -14,11 +14,7 @@ int getop(char []);
 void push(double);
 double pop(void);
 int return_stack_size(void);
-int check_var(char c);
-void set_var(char c, double d);
-double return_var(char c);
-void initialize_vars(void);
-void print_vars(void);
+double vars[MAXVAR];
 
 int main()
 {
@@ -27,22 +23,24 @@ int main()
     char s[MAXOP];
     int skip_pop = 0;
     double recent;
-    initialize_vars();
-
+    for(int i = 0 ; i < MAXVAR; i++)
+        vars[i] = DBL_MAX;
     while((type = getop(s)) != EOF){
         switch (type){
             case NUMBER:
                 push(atof(s));
                 break;
             case VAR: /* handles saving and using variables */
-                if (check_var(s[0]) == 1){
-                    recent = pop();
-                    set_var(s[0], recent);
+                if (vars[s[0] - 'A'] == DBL_MAX){
+                    vars[s[0] - 'A'] = pop();
+                    recent = vars[s[0] - 'A'];
                     printf("\t%0.8g\n", recent);
                     skip_pop = 1;
                 }
-                else 
-                    push(return_var(s[0]));
+                else {
+                    push(vars[s[0] - 'A']);
+                    vars[s[0] - 'A'] = DBL_MAX;
+                }
                 break;
             case 'r': /* Use last value */
                 push(recent);
@@ -74,8 +72,10 @@ int main()
                 printf("\t%.8g\n", recent);
                 skip_pop = 1;
                 break;
-            case 'v': /* print vars */
-                print_vars();
+            case 'v':
+                for(int i = 0 ; i < MAXVAR ; i++)
+                    printf("\t%d ", vars[i]);
+                printf("\n");
                 skip_pop = 1;
                 break;
             case 'd':
@@ -123,33 +123,6 @@ int main()
         }
     }
     return 0;
-}
-
-double vars[MAXVAR];
-
-void initialize_vars(void){
-    for(int i = 0 ; i < MAXVAR; i++)
-        vars[i] = DBL_MAX;
-}
-
-void print_vars(void){
-    for(int i = 0 ; i < MAXVAR ; i++)
-        printf("\t%.8g ", vars[i]);
-    printf("\n");
-}
-
-double return_var(char c){
-    double hold = vars[c - 'A'];
-    vars[c - 'A'] = DBL_MAX;
-    return hold;
-}
-
-int check_var(char c){
-    return (vars[c - 'A'] == DBL_MAX);
-}
-
-void set_var(char c, double d){
-        vars[c - 'A'] = d;
 }
 
 #define MAXVAL 100 /* maximum depth of val stack*/
@@ -211,7 +184,6 @@ int getop(char s[])
 #define BUFSIZE 100
 char buf[BUFSIZE];  /* buffer for ungetch */
 int bufp = 0;       /* next free position in buf */
-
 void print_buf()
 {
     printf("Buffer: ");

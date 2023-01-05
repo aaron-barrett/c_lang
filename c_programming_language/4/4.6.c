@@ -44,9 +44,6 @@ int main()
                 else 
                     push(return_var(s[0]));
                 break;
-            case 'r': /* Use last value */
-                push(recent);
-                break;
             case '+':
                 push(pop() + pop());
                 break;
@@ -78,7 +75,10 @@ int main()
                 print_vars();
                 skip_pop = 1;
                 break;
-            case 'd':
+            case 'r': /* Use last value */
+                push(recent);
+                break;
+            case 'd': /* double top stack value*/
                 op2 = pop();
                 push(op2);
                 push(op2);
@@ -222,7 +222,7 @@ void print_buf()
 
 int getch(void)     /* get a (possibly pushed back) character */
 {
-    print_buf();
+    // print_buf();
     return (bufp > 0) ? buf[--bufp] : getchar();
 }
 

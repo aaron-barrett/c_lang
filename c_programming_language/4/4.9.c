@@ -14,27 +14,16 @@ void ungetch(int c) /* push character back to input */
 {
     if (bufp >= BUFSIZE)
         printf("ungetch: too many characters\n");
-    else 
+    else if (c != EOF)
         buf[bufp++] = c;
 }
 
-void ungets(char s[])
-{
-    int string_size = strlen(s);
-    if (BUFSIZE - bufp < string_size)
-        printf("Not enough size in buffer.\n");
-    else
-        while (string_size > 0 )
-            ungetch(s[--string_size]);
-}
-
-
 int main()
 {
-    char s[] = "This is to use ungets.\n";
     int c;
-    ungets(s);
     while ((c = getch()) != EOF)
         putchar(c);
+    // char s[] = {'0', '1', '\0', '2', '3', '\0'};
+    // printf("%s\n",s);
     return 0;
 }

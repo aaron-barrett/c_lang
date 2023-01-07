@@ -14,7 +14,7 @@ int main()
     printf("After copying %d elements of t = \"%s\" to s = \"%s\".\n", n, t, u);
     printf("s = %s\n",s);
     printf("t = %s\n",t);
-    printf("Return pointer is:\n", l);
+    printf("Return pointer is:\n");
     printf("l = %s\n",l);
     printf("\n");
 
@@ -28,7 +28,7 @@ int main()
     printf("After concat %d elements of t = \"%s\" to s = \"%s\".\n", n, tt, uu);
     printf("s = %s\n",ss);
     printf("t = %s\n",tt);
-    printf("Return pointer is:\n", l);
+    printf("Return pointer is:\n");
     printf("l = %s\n",l);
     printf("\n");
 
@@ -36,13 +36,10 @@ int main()
     char sss[] = "1534";
     char ttt[] = "3834";
     n = 2;
-    printf("Before cmp %d elements of t = \"%s\" to s = \"%s\".\n", n, ttt,sss);
+    printf("cmp %d elements of t = \"%s\" to s = \"%s\".\n", n, ttt,sss);
     printf("s = %s\n",sss);
     printf("t = %s\n",ttt);
     int c = strncmp(sss,ttt,n);
-    printf("After cmp %d elements of t = \"%s\" to s = \"%s\".\n", n, ttt, sss);
-    printf("s = %s\n",sss);
-    printf("t = %s\n",ttt);
     printf("Return int is %d.\n", c);
 
     return 0;

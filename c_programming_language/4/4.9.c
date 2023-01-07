@@ -23,7 +23,5 @@ int main()
     int c;
     while ((c = getch()) != EOF)
         putchar(c);
-    // char s[] = {'0', '1', '\0', '2', '3', '\0'};
-    // printf("%s\n",s);
     return 0;
 }

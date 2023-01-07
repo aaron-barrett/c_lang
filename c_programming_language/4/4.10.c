@@ -29,7 +29,7 @@ int main()
     double recent;
     initialize_vars();
 
-    while((type = getop(s)) != 'x'){
+    while((type = getop(s)) != 'x'){ /* The stopping condition is 'x' instead of EOF since getlines doesn't handle EOF properly. This is due to the fact that the EOF is stored as an int (good), then put into a char in a char[] (bad), then returned as an int (no longer EOF)  */
         switch (type){
             case NUMBER:
                 push(atof(s));

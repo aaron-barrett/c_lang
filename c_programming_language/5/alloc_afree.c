@@ -45,5 +45,13 @@ int main()
         printf("%c ", initial[i]);
     printf("\n");
 
+    /* shows that the afree() changes frees the memory allocated with alloc, but that the memory still contains the same information.*/
+    printf("%d\n", allocp);
+    afree(next);
+    printf("%d\n", allocp);
+    for(int i = 0 ; i != size + next_size; i++)
+        printf("%c ", initial[i]);
+    printf("\n");
+
     return 0 ;
 }

@@ -19,8 +19,8 @@ int strend(char* s, char* t)
 int main()
 {
     char* s = "First String";
-    char *t = "String";
-    char *u = "SString";
+    char* t = "String";
+    char* u = "SString";
 
     if (strend(s,t) == 1)
         printf("\"%s\" appears at the end of \"%s\".\n", t,s);
@@ -31,6 +31,6 @@ int main()
         printf("\"%s\" appears at the end of \"%s\".\n", u,s);
     else
         printf("\"%s\" does not appears at the end of \"%s\".\n", u,s);
-        
+
     return 0;
 }

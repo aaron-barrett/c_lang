@@ -3,6 +3,7 @@
 
 #define MAXLEN 1000
 
+/* The below functions where reworked with pointers */
 int getlines(char* s, int lim);
 int atoi(char* s);
 void itoa(int n, char* s);
@@ -140,7 +141,6 @@ int getop(char* s)
         ungetch(c);
     return 1;
 }
-
 
 #define BUFSIZE 100
 char buf[BUFSIZE];  /* buffer for ungetch */

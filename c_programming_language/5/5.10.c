@@ -9,22 +9,38 @@ void push(double);
 double pop(void);
 void print_stack();
 void print_buf();
+double expr(int argc, char* s[]);
 
-int main()
+int main(int argc, char* argv[])
 {
-    int type;
-    double op2;
-    char s[MAXOP];
+    printf("argc = %d \t argv = ", argc);
+    for(int i = 1 ; i < argc ; i++)
+        printf("%s ", argv[i]);
+    printf("\n");
 
-    while((type = getop(s)) != EOF){
+    if (argc == 1)
+        printf("No expression to evaluate\n");
+    else
+        printf("arvg = %f\n", expr(argc, argv));
+
+    return 0;
+}
+
+double expr(int argc, char* s[])
+{
+    int op2;
+    int type;
+    int counter = 1;
+    while(counter != argc){
+        type = getop(s[counter]);
         switch (type){
             case NUMBER:
-                push(atof(s));
+                push(atof(s[counter]));
                 break;
             case '+':
                 push(pop() + pop());
                 break;
-            case '*':
+            case 'x':
                 push(pop() * pop());
                 break;
             case '-':
@@ -38,17 +54,18 @@ int main()
                 else 
                     printf("error: zero divisor\n");
                 break;
+            case ' ':
+                break;
             case '\n':
-                printf("\t%.8g\n", pop());
                 break;
             default:
-                printf("error: unknown command %s\n",s);
+                printf("error: unknown command %s\n",s[counter]);
         }
-        // print_stack();
-        // print_buf();
+        counter++;
     }
-    return 0;
+    return pop();
 }
+
 
 #define MAXVAL 100 /* maximum depth of val stack*/
 int sp = 0;        /* next free stack position*/
@@ -72,60 +89,21 @@ double pop(void)
 }
 
 #include <ctype.h>
-int getch(void);
-void ungetch(int);
 /* geto: get next operator or numeric operand */
 int getop(char s[])
 {
-    int i, c;
-    while ((s[0] = c = getch()) == ' ' || c == '\t')
-    ;
-    s[1] = '\0';
-    if (!isdigit(c) && c != '.')
-        return c;       /* not a number */
-    i = 0;
-    if (isdigit(c))     /* collect integer part */
-        while (isdigit(s[++i] = c = getch()))
+    int counter = 0;
+    while (s[counter]  == ' ' || s[counter] == '\t')
+        counter++;
+    if (!isdigit(s[counter]) && s[counter] != '.')
+        return s[counter];       /* not a number */
+    if (isdigit(s[counter]))     /* collect integer part */
+        while (isdigit(s[++counter]))
             ;
-    if (c == '.')       /* collect fraction part */
-        while (isdigit(s[++i] = c = getch()))
+    if (s[counter] == '.')    /* collect fraction part */
+        while (isdigit(s[++counter] ))
             ;
-    // print_buf();
-    s[i] = '\0';
-    if (c != EOF)
-        ungetch(c);
+    s[counter] = '\0';
     return NUMBER;
 }
 
-#define BUFSIZE 100
-char buf[BUFSIZE];  /* buffer for ungetch */
-int bufp = 0;       /* next free position in buf */
-int getch(void)     /* get a (possibly pushed back) character */
-{
-    return (bufp > 0) ? buf[--bufp] : getchar();
-}
-
-void ungetch(int c) /* push character back to input */
-{
-    if (bufp >= BUFSIZE)
-        printf("ungetch: too many characters\n");
-    else 
-        buf[bufp++] = c;
-}
-
-/* prints for debugging */
-void print_stack()
-{
-    printf("Stack: ");
-    for(int i = 0 ; i < sp; i++)
-        printf("%f ", val[i]);
-    printf("\tEnd stack\n");
-}
-
-void print_buf()
-{
-    printf("Buffer: ");
-    for(int i = 0 ; i < bufp; i++)
-        printf("%c ", buf[i]);
-    printf("\tEnd Buffer\n");
-}

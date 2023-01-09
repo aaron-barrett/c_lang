@@ -7,8 +7,6 @@
 int getop(char []);
 void push(double);
 double pop(void);
-void print_stack();
-void print_buf();
 double expr(int argc, char* s[]);
 
 int main(int argc, char* argv[])
@@ -106,4 +104,3 @@ int getop(char s[])
     s[counter] = '\0';
     return NUMBER;
 }
-

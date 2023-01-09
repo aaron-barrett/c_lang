@@ -2,18 +2,18 @@
 #define MAXLINE 1000
 #define TABSTOP 8
 
-int entab(char line[], int max);
+int detab(char line[], int max);
 
 int main()
 {
     char line[MAXLINE];
-    while ((entab(line, MAXLINE)) > 0)
+    while ((detab(line, MAXLINE)) > 0)
         printf("%s", line);
 
     return 0;
 }
 
-int entab(char s[], int lim)
+int detab(char s[], int lim)
 {
     int c, i,j;
     int tab_count = 0;

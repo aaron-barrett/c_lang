@@ -5,13 +5,53 @@
 
 int entab(char line[], int max, int tabstop);
 int detab(char line[], int max, int tabstop);
+int getlines(char s[], int lim);
 
 int main(int argc, char* argv[])
 {
-    int TABSTOP = atoi(argv[1]);
+    int TABSTOP = 8;
+    int tab_mode = 0;
+    char s[MAXLINE];
+    if (argc != 3){
+        printf("Not enough arguments.\n");
+        return 0;
+    }
+    else{
+        TABSTOP = atoi(argv[1]);
+        tab_mode = atoi(argv[2]);
+    }
+    switch(tab_mode){
+        case 0 :
+            printf("Enter a single line to entab:\n");
+            entab(s,MAXLINE,TABSTOP);
+            printf("%s\n",s);
+            break;
+        case 1:
+            printf("Enter a single line to detab:\n");
+            detab(s, MAXLINE, TABSTOP);
+            printf("%s\n",s);
+            break;
+        default :
+            printf("Invalid tab mode.\n");
+            break;
+
+    }
     return 0;
 }
 
+int getlines(char s[], int lim)
+{
+    int c, i;
+
+    for(i = 0 ; (i < lim-1) && (c=getchar()) != EOF && c != '\n' ; ++i)
+        s[i] = c;
+    if (c == '\n'){
+        s[i] = c;
+        ++i;
+    }
+    s[i] = '\0';
+    return i;
+}
 
 int detab(char s[], int lim, int TABSTOP)
 {

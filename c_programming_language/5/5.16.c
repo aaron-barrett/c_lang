@@ -106,7 +106,7 @@ int compare_if_fold(char s, char t)
 
 int compare_if_directory(char s, char t)
 {
-    return isalpha(s) && isalpha(t) && isdigit(s) && isdigit(t) && isspace(s) && isspace(t);
+    return (isalpha(s) || isdigit(s) || isspace(s))  && (isalpha(t) || isdigit(t) || isspace(t))
 }
 
 int to_skip(char s, char t, int fold, int directory)

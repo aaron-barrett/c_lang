@@ -104,12 +104,7 @@ int bufp = 0;       /* next free position in buf */
 
 int getch(void)     /* get a (possibly pushed back) character */
 {
-    int i = (bufp > 0) ? buf[--bufp] : getchar(); 
-    // if (isspace(i))
-        // printf("space\n");
-    // else
-        // printf("%c\n",i);
-    return i;
+    return (bufp > 0) ? buf[--bufp] : getchar(); 
 }
 
 void ungetch(int c) /* push character back to input */

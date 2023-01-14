@@ -126,16 +126,16 @@ void qsort_(void* v[], int left, int right, int (*comp)(void*, void*))
                         to_swap = 1;
                 }
             }
-            else {
-                if (reverse == 0){
-                    if ((*comp)(sorting_field, next_sorting_field) < 0)
-                        to_swap = 1;
-                }
-                else if (reverse == 1){
-                    if ((*comp)(sorting_field, next_sorting_field) > 0)
-                        to_swap = 1;
-                }
-            }
+            // else {
+            //     if (reverse == 0){
+            //         if ((*comp)(sorting_field, next_sorting_field) < 0)
+            //             to_swap = 1;
+            //     }
+            //     else if (reverse == 1){
+            //         if ((*comp)(sorting_field, next_sorting_field) > 0)
+            //             to_swap = 1;
+            //     }
+            // }
         }
         else{
             if (reverse == 0){

@@ -16,15 +16,20 @@ char name[MAXTOKEN];        /* identifer name */
 char datatype[MAXTOKEN];    /* data type = char, int, etc */
 char out[1000];             /* output string */
 
+int datatype_found = 0;
+char* qualifiers[] = {"const", "volatile", "signed", "unsigned", "short", "long"};
+
 int main()
 {
     while (gettoken() != EOF){
         strcpy(datatype, token);
+        datatype_found = 1;
         out[0] = '\0';
         dcl();
         if (tokentype != '\n')
             printf("syntax error");
         printf("%s: %s %s\n", name, out, datatype);
+        datatype_found = 0;
     }
     return 0;
 }
@@ -38,7 +43,9 @@ int gettoken(void) /* returns next token */
     while ((c = getch()) == ' ' || c == '\t')
         ;
     if (c == '('){
-        if ((c = getch()) == ')'){
+        while ((c = getch()) == ' ' || c == '\t') /* eliminates spurious spaces between parenthesis*/
+            ;
+        if (c == ')'){
             strcpy(token, "()");
             return tokentype = PARENS;
         }
@@ -48,14 +55,21 @@ int gettoken(void) /* returns next token */
         }
     }
     else if (c == '['){
-        for( *p++ = c ; (*p++ = getch()) != ']';)
-            ;
+        for( *p++ = c ; (c = getch()) != ']';)
+            if (isdigit(c)) /* recovers from non integer values in brackets. */
+                *p++ = c;
+        *p++ = c;
         *p = '\0';
         return tokentype  = BRACKETS;
     }
     else if (isalpha(c)){
-        for (*p++ = c; isalnum(c = getch());)
-            *p++ = c;
+        for (*p++ = c; isalnum(c = getch()) || isspace(c);)
+            if (datatype_found && isspace(c)) /* recovers spaces in name, but NOT return type */
+                continue;
+            else if ((datatype_found == 0) && isspace(c))
+                break;
+            else
+                *p++ = c;
         *p = '\0';
         ungetch(c);
         return tokentype = NAME;

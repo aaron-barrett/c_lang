@@ -61,7 +61,7 @@ int gettoken(void) /* returns next token */
         return tokentype  = BRACKETS;
     }
     else if (isalpha(c)){
-        for (*p++ = c;  !isspace(c = getch()) && c !='(' && c != '[' && c != '\n';){ /* only characters than can end a name field are spaces (default), left parenthesis and brackets, and newlines.*/
+        for (*p++ = c;  !isspace(c = getch()) && c !='(' && c != ')' && c != '[' && c != '\n';){ /* only characters than can end a name field are spaces (default), left parenthesis and brackets, and newlines.*/
             if (c == '_' && (datatype_found == 1))      /* inputs underscores in name, but NOT return type - NOTE -- this exercise assumes no qualifiers */
                 *p++ = c;
             else if (isalnum(c)){                       /* inputs only alpha-numeric characters  */

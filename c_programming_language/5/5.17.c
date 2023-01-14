@@ -5,23 +5,33 @@
 
 #define MAXLINES 5000
 char* lineptr[MAXLINES];
+char* sorting_fields[MAXLINES] = {"\0"};
+int sorting_fields_count = 0;
 
 int readlines(char* lineptr[], int nlines);
 void writelines(char* lineptr[], int nlines);
 
-void qsort_(void* lineptr[], int left, int right, int (*comp)(void*, void*, int, int), int reverse, int fold, int directory);
-int numcmp(char*, char*, int, int);
-int strcmp_(char*, char*, int, int);
+void qsort_(void* lineptr[], int left, int right, int (*comp)(void*, void*));
+int numcmp(char*, char*);
+int strcmp_(char*, char*);
+
+int numeric = 0;
+int reverse = 0;
+int fold = 0;
+int directory = 0;
 
 /* sort inputlies */
 int main(int argc, char* argv[])
 {
     int nlines;
-    int numeric = 0;
-    int reverse = 0;
-    int fold = 0;
-    int directory = 0;
     int c;
+
+    for(int i = 1 ; i < argc; i++)
+        if (argv[i][0] != '-'){
+            sorting_fields[sorting_fields_count++] = argv[i];
+            printf("%s\n", sorting_fields[sorting_fields_count-1]);
+        }
+
     while (argc > 1){
         argv++;
         argc--;
@@ -44,7 +54,7 @@ int main(int argc, char* argv[])
         }
     }
     if ((nlines = readlines(lineptr, MAXLINES)) >= 0){
-        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*, int, int))(numeric ? numcmp : strcmp_), reverse, fold, directory);
+        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*))(numeric ? numcmp : strcmp_));
         writelines(lineptr, nlines);
         return 0;
     }
@@ -55,7 +65,7 @@ int main(int argc, char* argv[])
 }
 
 /* qsort_: sort v[left]...v[right] into increasing order */
-void qsort_(void* v[], int left, int right, int (*comp)(void*, void*, int, int), int reverse, int fold, int directory)
+void qsort_(void* v[], int left, int right, int (*comp)(void*, void*))
 {
     int i, last, to_swap;
     void swap(void* v[], int, int);
@@ -64,11 +74,11 @@ void qsort_(void* v[], int left, int right, int (*comp)(void*, void*, int, int),
     last = left;
     for(i = left+1; i<= right; i++){
         if (reverse == 0){
-            if ((*comp)(v[i], v[left], fold, directory) < 0)
+            if ((*comp)(v[i], v[left]) < 0)
                 to_swap = 1;
         }
         else if (reverse == 1){
-            if ((*comp)(v[i], v[left], fold, directory) > 0)
+            if ((*comp)(v[i], v[left]) > 0)
                 to_swap = 1;
         }
         if (to_swap == 1)
@@ -76,13 +86,13 @@ void qsort_(void* v[], int left, int right, int (*comp)(void*, void*, int, int),
         to_swap = 0;
     }
     swap(v, left, last);
-    qsort_(v, left, left-1, comp, reverse, fold, directory);
-    qsort_(v, left+1, right, comp, reverse, fold, directory);
+    qsort_(v, left, left-1, comp);
+    qsort_(v, left+1, right, comp);
 }
 
 /* numcmp: compars s1 and s2 numerically */
 /* strings without leading numbers are cast as 0.0 in atof() */
-int numcmp(char* s1, char* s2, int fold, int directory)
+int numcmp(char* s1, char* s2)
 {
     double v1, v2;
     v1 = atof(s1);
@@ -109,7 +119,7 @@ int compare_if_directory(char s, char t)
     return (isalpha(s) || isdigit(s) || isspace(s)) && (isalpha(t) || isdigit(t) || isspace(t));
 }
 
-int to_skip(char s, char t, int fold, int directory)
+int to_skip(char s, char t)
 {
     int skip = fold + directory;
     if (skip != 0){
@@ -123,10 +133,10 @@ int to_skip(char s, char t, int fold, int directory)
 }
 
 /* strcmp_: return <0 if s<t, 0 if s==t, >0 if s>t */
-int strcmp_(char* s, char* t, int fold, int directory)
+int strcmp_(char* s, char* t)
 {
     int i;
-    for(i = 0; s[i] == t[i] || to_skip(s[i], t[i], fold, directory); i++)
+    for(i = 0; s[i] == t[i] || to_skip(s[i], t[i]); i++)
         if (s[i] == '\0')
             return 0;
     return s[i] - t[i];

@@ -4,7 +4,7 @@
 
 #define MAXTOKEN 100
 
-enum{NAME, PARENS, BRACKETS};
+enum{NAME, TYPE, QUALIFIER, PARENS, BRACKETS};
 
 void dcl(void);
 void dirdcl(void);
@@ -17,7 +17,23 @@ char datatype[MAXTOKEN];    /* data type = char, int, etc */
 char out[1000];             /* output string */
 
 int datatype_found = 0;
-char* qualifiers[] = {"const", "volatile", "signed", "unsigned", "short", "long"};
+#define MAXTYPE 10
+char* qualifiers[] =    {"const", "volatile", "signed", "unsigned", "short", "long"};
+char* datatypes[]  =    {"int", "double", "float", "char"};
+
+int find_datatype(char s[]){
+    for(int i = 0 ; i < sizeof(datatypes) / sizeof(datatypes[0]); i++)
+        if (strcmp(s,datatypes[i]))
+            return i;
+    return -1;
+}
+
+int find_qualifer(char s[]){
+    for(int i = 0 ; i < sizeof(qualifiers) / sizeof(qualifiers[0]); i++)
+        if (strcmp(s,qualifiers[i]))
+            return i;
+    return -1;
+}
 
 int main()
 {

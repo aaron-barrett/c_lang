@@ -4,6 +4,8 @@
 
 #define MAXTOKEN 100
 #define MAXOUT 1000
+#define MAXARG 10
+
 enum{NAME, TYPE, QUALIFIER, PARENS, BRACKETS};
 
 void dcl(void);
@@ -16,6 +18,7 @@ char name[MAXTOKEN];        /* identifer name */
 char datatype[MAXTOKEN];    /* data type = char, int, etc */
 char out[MAXOUT];             /* output string */
 char argument[MAXOUT];             /* output string */
+char final_output[MAXOUT];             /* output string */
 
 // #define MAXKEYWORD 10 // for adding in option for user to input defined datatype, this would mean the "find" functiosn need changing, and this really just substitutes a robust "struct" functionality.
 char* qualifiers[] =    {"const", "volatile", "signed", "unsigned", "short", "long"};
@@ -43,6 +46,7 @@ void clear_output()
     datatype[0] = '\0';
     out[0] = '\0';
     argument[0] = '\0';
+    final_output[0] = '\0';
 }
 
 int main()
@@ -54,7 +58,15 @@ int main()
         dcl();
         if (tokentype != '\n')
             printf("syntax error\t tokentype: %c\n", tokentype);
-        printf("%s: %s %s\n", name, out, datatype);
+        /* thes prettify the output */
+        strcat(final_output,name);
+        strcat(final_output, ": ");
+        strcat(final_output, out);
+        if (out[strlen(out)-1] != ' ')
+            strcat(final_output, " ");
+        strcat(final_output, datatype);
+
+        printf("%s\n",final_output);
         clear_output();
     }
     return 0;
@@ -109,8 +121,7 @@ void func_args(char* hold)
 {
     int counter = 0;
     int type_type;
-    int MAXARG = 50;
-    char hold_type[MAXARG][MAXARG];
+    char hold_type[MAXARG][MAXTOKEN];
     for(int i = 0 ; i < MAXARG ; i++)
         hold_type[i][0] = '\0';
     if (tokentype == TYPE)
@@ -132,7 +143,9 @@ void func_args(char* hold)
             if (gettoken() == '*' && gettoken()  == NAME){
                 strcpy(return_type, hold_type[--counter]);
                 strcpy(hold_type[counter], "pointer to function ");
+                strcat(hold_type[counter], "\"");
                 strcat(hold_type[counter], token);
+                strcat(hold_type[counter], "\"");
                 if (gettoken() == ')' && (type_type = gettoken()) == '('){
                     strcat(hold_type[counter], " passing ");
                     func_args(hold_func);
@@ -140,7 +153,7 @@ void func_args(char* hold)
                 }
                 else if (type_type == PARENS)
                     strcat(hold_type[counter], hold_func);
-                strcat(hold_type[counter], " returning ");
+                strcat(hold_type[counter], " returning");
                 strcat(hold_type[counter++], return_type);
             }
             else 
@@ -159,7 +172,10 @@ void dcl(void)
         ns++;
     dirdcl();
     while(ns-- > 0)
-        strcat(out, " pointer to ");
+        if (strcmp(out, "") == 0)
+            strcat(out, "pointer to ");
+        else
+            strcat(out, " pointer to ");
 }
 
 /* dirdcl: parse a direct declarator */
@@ -191,7 +207,7 @@ void dirdcl(void)
             strcat(out, "function passing ");
             strcat(out, argument);
             argument[0] = '\0';
-            strcat(out, " returning ");
+            strcat(out, " returning");
         }
         return;
     }
@@ -202,10 +218,10 @@ void dirdcl(void)
     if (tokentype != '\n')
         while ((type = gettoken())  == PARENS || type == BRACKETS)
             if (type == PARENS){
-                strcat(out, " function returning ");
+                strcat(out, "function returning");
             }
             else if (type == BRACKETS) {
-                strcat(out, " array");
+                strcat(out, "array");
                 strcat(out, token);
                 strcat(out, " of");
             }

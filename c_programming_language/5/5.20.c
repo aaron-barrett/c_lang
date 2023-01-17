@@ -179,12 +179,12 @@ void dirdcl(void)
         func_args(argument);
         dirdcl();
     }
-    else if (tokentype == QUALIFIER){ /* only works for qualifiers for main type */
+    else if (tokentype == QUALIFIER){  /* only used for qualifiers for main type */
         char datatype_hold[10];
-            strcpy(datatype_hold,token);
-            strcat(datatype_hold," ");
-            dcl();
-            strcat(out, datatype_hold);
+        strcpy(datatype_hold,token);
+        strcat(datatype_hold," ");
+        dcl();
+        strcat(out, datatype_hold);
     }
     else if (tokentype == ')'){
         if (strcmp(argument, "\0") != 0){

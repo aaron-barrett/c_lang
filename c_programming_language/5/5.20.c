@@ -17,8 +17,6 @@ char datatype[MAXTOKEN];    /* data type = char, int, etc */
 char out[MAXOUT];             /* output string */
 char argument[MAXOUT];             /* output string */
 
-int datatype_found = 0;
-int name_found = 0;
 // #define MAXKEYWORD 10 // for adding in option for user to input defined datatype, this would mean the "find" functiosn need changing, and this really just substitutes a robust "struct" functionality.
 char* qualifiers[] =    {"const", "volatile", "signed", "unsigned", "short", "long"};
 char* datatypes[]  =    {"int", "double", "float", "char", "void"};
@@ -39,8 +37,6 @@ int is_qualifer(char s[]){
 
 void clear_output()
 {
-    datatype_found = 0;
-    name_found = 0;
     tokentype = 0;
     token[0] = '\0';
     name[0] = '\0';
@@ -93,19 +89,9 @@ int gettoken(void) /* returns next token */
         return tokentype  = BRACKETS;
     }
     else if (isalpha(c)){
-        for (*p++ = c;  !isspace(c = getch()) && c !='(' && c != ')' && c != '[' && c != '\n' && c != '*' && c != ',';){ /* only characters than can end a name field are spaces (default), left parenthesis and brackets, and newlines.*/
-            if (c == '_' && (datatype_found == 1))      /* inputs underscores in name, but NOT return type - NOTE -- this exercise assumes no qualifiers */
+        for (*p++ = c;  !isspace(c = getch()) && c !='(' && c != ')' && c != '[' && c != '\n' && c != '*' && c != ',';) /* only characters than can end a name field are spaces (default), left parenthesis and brackets, and newlines.*/
+           if (isalnum(c) || c == '_')                   /* inputs only alpha-numeric characters and underscores */
                 *p++ = c;
-            else if (isalnum(c)){                       /* inputs only alpha-numeric characters  */
-                *p++ = c;
-            }
-            else if (isspace(c))
-            {
-                *p = '\0';
-                if(is_datatype(token) != -1 || is_qualifer(token) != -1)
-                    break;
-            }
-        }
         *p = '\0';
         ungetch(c);
         if (is_datatype(token) != -1)
@@ -119,7 +105,7 @@ int gettoken(void) /* returns next token */
         return tokentype = c;
 }
 
-void internal_func(char* hold)
+void func_args(char* hold)
 {
     int counter = 0;
     int type_type;
@@ -145,19 +131,20 @@ void internal_func(char* hold)
             char return_type[100];
             if (gettoken() == '*' && gettoken()  == NAME){
                 strcpy(return_type, hold_type[--counter]);
-                strcpy(hold_type[counter], " pointer to function ");
+                strcpy(hold_type[counter], "pointer to function ");
                 strcat(hold_type[counter], token);
                 if (gettoken() == ')' && (type_type = gettoken()) == '('){
-                strcat(hold_type[counter], " passing ");
-                    internal_func(hold_func);
+                    strcat(hold_type[counter], " passing ");
+                    func_args(hold_func);
                     strcat(hold_type[counter], hold_func);
                 }
-                else if (type_type == PARENS){
+                else if (type_type == PARENS)
                     strcat(hold_type[counter], hold_func);
-                }
                 strcat(hold_type[counter], " returning ");
                 strcat(hold_type[counter++], return_type);
             }
+            else 
+                printf("Syntax error in function arguments.\n");
         }
     }
     while (counter > 0)
@@ -186,12 +173,10 @@ void dirdcl(void)
             printf("type %d\n", tokentype);
         }
     }
-    else if (tokentype == NAME){
-        name_found = 1;
+    else if (tokentype == NAME)
         strcpy(name, token);
-    }
     else if (tokentype == TYPE ){ /*this does not handle the initial return type which is different */
-        internal_func(argument);
+        func_args(argument);
         dirdcl();
     }
     else if (tokentype == QUALIFIER){ /* only works for qualifiers for main type */
@@ -203,7 +188,7 @@ void dirdcl(void)
     }
     else if (tokentype == ')'){
         if (strcmp(argument, "\0") != 0){
-            strcat(out, " function passing ");
+            strcat(out, "function passing ");
             strcat(out, argument);
             argument[0] = '\0';
             strcat(out, " returning ");

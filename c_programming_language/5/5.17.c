@@ -5,8 +5,9 @@
 
 #define MAXLINES 5000
 char* lineptr[MAXLINES];
-char* sorting_field = "";
-char* next_sorting_field = "";
+char sorting_field[100];
+char next_sorting_field[100];
+char past_sorting_field[100];
 
 int readlines(char* lineptr[], int nlines);
 void writelines(char* lineptr[], int nlines);
@@ -26,13 +27,12 @@ void reset_options()
     reverse = 0;
     fold = 0;
     directory = 0;
-    sorting_field = "";
-    next_sorting_field = "";
 }
 
 void print_operation()
 {
     printf("sorting field \"%s\"\n", sorting_field);
+    printf("past sorting field \"%s\"\n", past_sorting_field);
     printf("next sorting field \"%s\"\n", next_sorting_field);
     printf("options ");
     if (numeric)
@@ -51,6 +51,9 @@ int main(int argc, char* argv[])
 {
     int nlines = 0;
     int c;
+    strcpy(next_sorting_field,"");
+    strcpy(past_sorting_field,"");
+    strcpy(sorting_field,"");
 
     if ((nlines = readlines(lineptr, MAXLINES)) > MAXLINES){
         printf("input too big to sort\n");
@@ -60,13 +63,14 @@ int main(int argc, char* argv[])
         printf("no input lines to sort\n");
         return 1;
     }
-    /* initial sort to get those entries which have no overlapping sorting fields in their correct place.*/
-    // qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*))(numeric ? numcmp : strcmp_));
-    // writelines(lineptr, nlines);
-
+    if (argc == 1){
+        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*))(numeric ? numcmp : strcmp_));
+        writelines(lineptr, nlines);
+        return 0;
+    }
     for(int i = 1 ; i < argc;){
         if (argv[i][0] != '-'){
-            sorting_field = argv[i];
+            strcpy(sorting_field,argv[i]);
             i++;
         }
         if (i < argc)
@@ -92,9 +96,13 @@ int main(int argc, char* argv[])
                     break;
             }
         if (i < argc)
-            next_sorting_field = argv[i];
+            strcpy(next_sorting_field,argv[i]);
+        else
+            strcpy(next_sorting_field,"");
         // print_operation();
         qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*))(numeric ? numcmp : strcmp_));
+        // writelines(lineptr, nlines);
+        strcpy(past_sorting_field,sorting_field);
         reset_options();
     }
     writelines(lineptr, nlines);
@@ -105,70 +113,63 @@ int main(int argc, char* argv[])
 /* qsort_: sort v[left]...v[right] into increasing order */
 void qsort_(void* v[], int left, int right, int (*comp)(void*, void*))
 {
-    int i, last, to_swap;
+    int i, last;
+    int to_swap = 0;
     void swap(void* v[], int, int);
-    void determine_field(char* v1, char* v2, char* s, char* t);
+    void determine_field(char* v1, char* v2, char* s, char* t, char* field, char* next_field);
     if (left >= right)
         return ;
+    if (strstr(v[(left + right)/2], sorting_field) == NULL) /* handles if consecutive fields don't overlap*/
+        return;
+    swap(v,left,(left+right)/2);
     last = left;
     for(i = left+1; i<= right; i++){
-        if (sorting_field != ""){
-            char s[100];
-            char t[100];
-            determine_field(v[i], v[left], s, t);
-            if (s[0] != '\0' && t[0] != '\0'){
-                if (reverse == 0){
-                    if ((*comp)(s, t) < 0)
-                        to_swap = 1;
-                }
-                else if (reverse == 1){
-                    if ((*comp)(s, t) > 0)
-                        to_swap = 1;
-                }
+        char s[100];
+        char t[100];
+        if (strcmp(past_sorting_field, "") != 0){
+            determine_field(v[i], v[left], s, t, past_sorting_field, sorting_field);
+            printf("%s\t%s\n", v[i], v[left]);
+            printf("%s\t%s\n",s,t);
+            if (s[0] == '\0' || t[0] == '\0')
+                continue;
+            if ((*comp)(s, t) != 0){
+                printf("HERE\n");
+               continue;
             }
-            // else {
-            //     if (reverse == 0){
-            //         if ((*comp)(sorting_field, next_sorting_field) < 0)
-            //             to_swap = 1;
-            //     }
-            //     else if (reverse == 1){
-            //         if ((*comp)(sorting_field, next_sorting_field) > 0)
-            //             to_swap = 1;
-            //     }
-            // }
         }
-        else{
-            if (reverse == 0){
-                if ((*comp)(v[i], v[left]) < 0)
-                    to_swap = 1;
-            }
-            else if (reverse == 1){
-                if ((*comp)(v[i], v[left]) > 0)
-                    to_swap = 1;
-            }
+        determine_field(v[i], v[left], s, t, sorting_field, next_sorting_field);
+        if (s[0] == '\0' || t[0] == '\0')
+            continue;
+        if (reverse == 0){
+            if ((*comp)(s, t) < 0)
+                to_swap = 1;
+        }
+        else if (reverse == 1){
+            if ((*comp)(s, t) > 0)
+                to_swap = 1;
         }
         if (to_swap == 1)
             swap(v, ++last, i);
         to_swap = 0;
     }
     swap(v, left, last);
-    qsort_(v, left, left-1, comp);
-    qsort_(v, left+1, right, comp);
+    qsort_(v, left, last-1, comp);
+    qsort_(v, last+1, right, comp);
 }
 
-void determine_field(char* v1, char* v2, char s[], char t[]){
-    char* s_start = strstr(v1,sorting_field);
-    char* t_start = strstr(v2,sorting_field);
+void determine_field(char* v1, char* v2, char s[], char t[], char field[], char next_field[]){
+    char* s_start = strstr(v1,field);
+    char* t_start = strstr(v2,field);
     if(s_start == NULL || t_start == NULL){
         s[0] = '\0';
         t[0] = '\0';
         return;
     }
-    if (next_sorting_field != "")
+    if (strcmp(next_field, "") != 0)
     {
-        char* s_next = strstr(v1, next_sorting_field);
-        char* t_next = strstr(v2, next_sorting_field);
-        for(int i = 0 ; i < strlen(sorting_field); i++){
+        char* s_next = strstr(v1, next_field);
+        char* t_next = strstr(v2, next_field);
+        for(int i = 0 ; i < strlen(field); i++){
             s_start++;
             t_start++;
         }
@@ -182,7 +183,7 @@ void determine_field(char* v1, char* v2, char s[], char t[]){
         t[i] = '\0';
     }
     else {
-        for(int i = 0 ; i < strlen(sorting_field); i++){
+        for(int i = 0 ; i < strlen(field); i++){
             s_start++;
             t_start++;
         }
@@ -246,6 +247,8 @@ int strcmp_(char* s, char* t)
     for(i = 0; s[i] == t[i] || to_skip(s[i], t[i]); i++)
         if (s[i] == '\0')
             return 0;
+    if (fold == 1)
+        return tolower(s[i]) - tolower(t[i]);
     return s[i] - t[i];
 
 }
@@ -315,3 +318,9 @@ char* alloc (int n) /* return pointer to n characters */
     else 
         return 0;
 }
+
+/* Test case */
+// chap2sec2
+// chap1sec2
+// chap1sec1
+// chap2sec1

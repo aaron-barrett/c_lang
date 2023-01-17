@@ -39,12 +39,13 @@ void qsort_(void* v[], int left, int right, int (*comp)(void*, void*))
     if (left >= right)
         return ;
     last = left;
-    for(i = left+1; i<= right; i++)
+    swap(v,left,(left+right)/2);
+    for(i = left + 1; i <= right; i++)
         if ((*comp)(v[i], v[left]) < 0)
             swap(v, ++last, i);
     swap(v, left, last);
-    qsort_(v, left, left-1, comp);
-    qsort_(v, left+1, right, comp);
+    qsort_(v, left, last-1, comp);
+    qsort_(v, last+1, right, comp);
 }
 
 /* numcmp: compars s1 and s2 numerically */
@@ -65,11 +66,11 @@ int numcmp(char* s1, char* s2)
 /* strcmp_: return <0 if s<t, 0 if s==t, >0 if s>t */
 int strcmp_(char* s, char* t)
 {
-    int i;
-    for(i = 0; s[i] == t[i]; i++)
+    int i = 0;
+    for(; s[i] == t[i]; i++)
         if (s[i] == '\0')
             return 0;
-    return s[i] - t[i];
+    return (s[i] - t[i]);
 }
 void swap(void* v[], int i, int j)
 {

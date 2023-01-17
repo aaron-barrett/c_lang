@@ -9,17 +9,18 @@ char* lineptr[MAXLINES];
 int readlines(char* lineptr[], int nlines);
 void writelines(char* lineptr[], int nlines);
 
-void qsort_(void* lineptr[], int left, int right, int (*comp)(void*, void*, int), int reverse, int fold);
-int numcmp(char*, char*, int);
-int strcmp_(char*, char*, int);
+void qsort_(void* lineptr[], int left, int right, int (*comp)(void*, void*));
+int numcmp(char*, char*);
+int strcmp_(char*, char*);
+
+int numeric = 0;
+int reverse = 0;
+int fold = 0;
 
 /* sort inputlies */
 int main(int argc, char* argv[])
 {
     int nlines;
-    int numeric = 0;
-    int reverse = 0;
-    int fold = 0;
     int c;
     while (argc > 1){
         argv++;
@@ -40,8 +41,10 @@ int main(int argc, char* argv[])
                 break;
         }
     }
+    if (fold ==1)
+        printf("fold\n");
     if ((nlines = readlines(lineptr, MAXLINES)) >= 0){
-        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*, int))(numeric ? numcmp : strcmp_), reverse, fold);
+        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*))(numeric ? numcmp : strcmp_));
         writelines(lineptr, nlines);
         return 0;
     }
@@ -52,20 +55,22 @@ int main(int argc, char* argv[])
 }
 
 /* qsort_: sort v[left]...v[right] into increasing order */
-void qsort_(void* v[], int left, int right, int (*comp)(void*, void*, int), int reverse, int fold)
+void qsort_(void* v[], int left, int right, int (*comp)(void*, void*))
 {
-    int i, last, to_swap;
+    int i, last;
+    int to_swap = 0;
     void swap(void* v[], int, int);
     if (left >= right)
         return ;
+    swap(v,left,(left+right)/2);
     last = left;
     for(i = left+1; i<= right; i++){
         if (reverse == 0){
-            if ((*comp)(v[i], v[left], fold) < 0)
+            if ((*comp)(v[i], v[left]) < 0)
                 to_swap = 1;
         }
         else if (reverse == 1){
-            if ((*comp)(v[i], v[left], fold) > 0)
+            if ((*comp)(v[i], v[left]) > 0)
                 to_swap = 1;
         }
         if (to_swap == 1)
@@ -73,13 +78,13 @@ void qsort_(void* v[], int left, int right, int (*comp)(void*, void*, int), int 
         to_swap = 0;
     }
     swap(v, left, last);
-    qsort_(v, left, left-1, comp, reverse, fold);
-    qsort_(v, left+1, right, comp, reverse, fold);
+    qsort_(v, left, last-1, comp);
+    qsort_(v, last+1, right, comp);
 }
 
 /* numcmp: compars s1 and s2 numerically */
 /* strings without leading numbers are cast as 0.0 in atof() */
-int numcmp(char* s1, char* s2, int fold)
+int numcmp(char* s1, char* s2)
 {
     double v1, v2;
     v1 = atof(s1);
@@ -93,23 +98,23 @@ int numcmp(char* s1, char* s2, int fold)
 }
 
 /* performs a comparison if fold option is chosen by comparing lower cases of relevant characters */
-int compare_if_fold(char s, char t)
-{
-    if ( ((s <= 'z' && s >= 'a') || (s <= 'Z' && s >= 'A')) &&
-     ((t <= 'z' && t >= 'a') || (t <= 'Z' && t >= 'A')) )
-     return (tolower(s) == tolower(t));
+// int compare_if_fold(char s, char t)
+// {
+//     if ( ((s <= 'z' && s >= 'a') || (s <= 'Z' && s >= 'A')) &&
+//      ((t <= 'z' && t >= 'a') || (t <= 'Z' && t >= 'A')) )
+//      return (tolower(s) == tolower(t));
     
-}
+// }
 
 /* strcmp_: return <0 if s<t, 0 if s==t, >0 if s>t */
-int strcmp_(char* s, char* t, int fold)
+int strcmp_(char* s, char* t)
 {
     int i;
-    if (fold){
-        for(i = 0; s[i] == t[i] || compare_if_fold(s[i], t[i]) ; i++)
+    if (fold == 1){
+        for(i = 0; (tolower(s[i]) == tolower(t[i])) ; i++)
             if (s[i] == '\0')
                 return 0;
-        return s[i] - t[i];
+        return tolower(s[i]) - tolower(t[i]);
     }
     else {
         for(i = 0; s[i] == t[i] ; i++)
@@ -117,8 +122,8 @@ int strcmp_(char* s, char* t, int fold)
                 return 0;
         return s[i] - t[i];
     }
-
 }
+
 void swap(void* v[], int i, int j)
 {
     void* temp;

@@ -48,7 +48,7 @@ void determine_field(char* v1, char* v2, char s[], char t[]){
 int main()
 {
    char* v1 = "chap1sec2";
-   char* v2 = "1sec1";
+   char* v2 = "chap2sec1";
    char s[100];
    char t[100];
    determine_field(v1,v2,s,t);

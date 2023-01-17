@@ -8,16 +8,17 @@ char* lineptr[MAXLINES];
 int readlines(char* lineptr[], int nlines);
 void writelines(char* lineptr[], int nlines);
 
-void qsort_(void* lineptr[], int left, int right, int (*comp)(void*, void*), int reverse);
+void qsort_(void* lineptr[], int left, int right, int (*comp)(void*, void*));
 int numcmp(char*, char*);
 int strcmp_(char*, char*);
+
+int numeric = 0;
+int reverse = 0;
 
 /* sort inputlies */
 int main(int argc, char* argv[])
 {
     int nlines;
-    int numeric = 0;
-    int reverse = 0;
     int c;
     while (argc > 1){
         argv++;
@@ -35,8 +36,10 @@ int main(int argc, char* argv[])
                 break;
         }
     }
+    // printf("reverse = %d\n", reverse);
+    // printf("numeric = %d\n", numeric);
     if ((nlines = readlines(lineptr, MAXLINES)) >= 0){
-        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*))(numeric ? numcmp : strcmp_), reverse);
+        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*))(numeric ? numcmp : strcmp_));
         writelines(lineptr, nlines);
         return 0;
     }
@@ -47,12 +50,14 @@ int main(int argc, char* argv[])
 }
 
 /* qsort_: sort v[left]...v[right] into increasing order */
-void qsort_(void* v[], int left, int right, int (*comp)(void*, void*), int reverse)
+void qsort_(void* v[], int left, int right, int (*comp)(void*, void*))
 {
-    int i, last, to_swap;
+    int i, last;
+    int to_swap = 0;
     void swap(void* v[], int, int);
     if (left >= right)
         return ;
+    swap(v,left,(left+right)/2);
     last = left;
     for(i = left+1; i<= right; i++){
         if (reverse == 0){
@@ -68,8 +73,8 @@ void qsort_(void* v[], int left, int right, int (*comp)(void*, void*), int rever
         to_swap = 0;
     }
     swap(v, left, last);
-    qsort_(v, left, left-1, comp, reverse);
-    qsort_(v, left+1, right, comp, reverse);
+    qsort_(v, left, last-1, comp);
+    qsort_(v, last+1, right, comp);
 }
 
 /* numcmp: compars s1 and s2 numerically */

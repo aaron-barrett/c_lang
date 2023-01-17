@@ -15,6 +15,7 @@ char token[MAXTOKEN];       /* last token string */
 char name[MAXTOKEN];        /* identifer name */
 char datatype[MAXTOKEN];    /* data type = char, int, etc */
 char out[MAXOUT];             /* output string */
+char argument[MAXOUT];             /* output string */
 
 int datatype_found = 0;
 // #define MAXKEYWORD 10 // for adding in option for user to input defined datatype, this would mean the "find" functiosn need changing, and this really just substitutes a robust "struct" functionality.
@@ -37,10 +38,13 @@ int is_qualifer(char s[]){
 
 void clear_output()
 {
+    datatype_found = 0;
+    tokentype = 0;
     token[0] = '\0';
     name[0] = '\0';
     datatype[0] = '\0';
     out[0] = '\0';
+    argument[0] = '\0';
 }
 
 int main()
@@ -48,14 +52,11 @@ int main()
     clear_output();
     while (gettoken() != EOF){
         strcat(datatype, token);
-        strcat(datatype, " ");
         out[0] = '\0';
         dcl();
         if (tokentype != '\n')
-            printf("syntax error\n");
-        else 
-            printf("%s: %s %s\n", name, out, datatype);
-            // printf("output: %s \n", out);
+            printf("syntax error\t tokentype: %c\n", tokentype);
+        printf("%s: %s %s\n", name, out, datatype);
         clear_output();
     }
     return 0;
@@ -90,11 +91,17 @@ int gettoken(void) /* returns next token */
         return tokentype  = BRACKETS;
     }
     else if (isalpha(c)){
-        for (*p++ = c;  !isspace(c = getch()) && c !='(' && c != ')' && c != '[' && c != '\n';){ /* only characters than can end a name field are spaces (default), left parenthesis and brackets, and newlines.*/
+        for (*p++ = c;  !isspace(c = getch()) && c !='(' && c != ')' && c != '[' && c != '\n' && c != '*' && c != ',';){ /* only characters than can end a name field are spaces (default), left parenthesis and brackets, and newlines.*/
             if (c == '_' && (datatype_found == 1))      /* inputs underscores in name, but NOT return type - NOTE -- this exercise assumes no qualifiers */
                 *p++ = c;
             else if (isalnum(c)){                       /* inputs only alpha-numeric characters  */
                 *p++ = c;
+            }
+            else if (isspace(c))
+            {
+                *p = '\0';
+                if(is_datatype(token) != -1 || is_qualifer(token) != -1)
+                    break;
             }
         }
         *p = '\0';
@@ -107,7 +114,7 @@ int gettoken(void) /* returns next token */
             return tokentype = NAME;
     }
     else
-        return tokentype = c;        
+        return tokentype = c;
 }
 
 /* dcl: parse a declarator */
@@ -118,54 +125,76 @@ void dcl(void)
         ns++;
     dirdcl();
     while(ns-- > 0)
-        strcat(out, " pointer to");
+        strcat(out, " pointer to ");
 }
 
 /* dirdcl: parse a direct declarator */
 void dirdcl(void)
 {
     int type;
-    int past_type;
-    char local_type[MAXOUT];
-    char local_name[MAXOUT];
-    local_name[0] = '\0';
-    local_type[0] = '\0';
     if (tokentype == '('){
         dcl();
-        if(tokentype != ')')
-            printf("error missing ')'\n");
+        if(tokentype != ')'){
+            printf("error missing ')' \n");
+            printf("type %d\n", tokentype);
+        }
     }
-
-    else if (tokentype == NAME || tokentype == QUALIFIER){
-        do {
-            if (tokentype == NAME)
-                strcpy(name, token);
-            else if (tokentype == QUALIFIER){
-                strcat(datatype, token);
-                // dcl();
+    else if (tokentype == NAME)
+        strcpy(name, token);
+    else if (tokentype == TYPE){ /*this does not handle the initial return type which is different */
+        int MAXARG = 20;
+        char hold_type[MAXARG][MAXARG];
+        for(int i = 0 ; i < MAXARG ; i++)
+            hold_type[i][0] = '\0';
+        int counter = 0;
+        strcpy(hold_type[counter++], token);
+        while (gettoken() != ')'){
+            if (tokentype == '*')
+                strcpy(hold_type[counter++], " pointer to ");
+            else if (tokentype == QUALIFIER || tokentype == TYPE)
+                strcpy(hold_type[counter++], token);
+            else if (tokentype == ','){
+                while (counter > 0)
+                    strcat(argument, hold_type[--counter]);
+                strcat(argument, " and ");
             }
-            // else if (tokentype == TYPE)
-                // strcat(local_type, token);
-        }while((type = gettoken()) == NAME || type == QUALIFIER);
+        }
+        while (counter > 0)
+            strcat(argument, hold_type[--counter]);
+        dirdcl();
     }
-    else 
+    else if (tokentype == QUALIFIER){ /* only works for qualifiers for main type */
+        char datatype_hold[10];
+            strcpy(datatype_hold,token);
+            strcat(datatype_hold," ");
+            dcl();
+            strcat(out, datatype_hold);
+    }
+    else if (tokentype == ')'){
+        if (strcmp(argument, "\0") != 0){
+            strcat(out, " function passing ");
+            strcat(out, argument);
+            argument[0] = '\0';
+            strcat(out, " returning ");
+        }
+        return;
+    }
+    else {
         printf("error :expected name or (dcl)\n");
-    while (type  == PARENS || type == BRACKETS)
-        if (type == PARENS){
-            if (strcmp(local_type, "\0") != 0){
-                strcat(out, " function passing");
-                strcat(out, local_type);
-                strcat(out, " returning");
-                local_type[0] = '\0';
+        printf("type %c\n", tokentype);
+    }
+    if (tokentype != '\n')
+        while ((type = gettoken())  == PARENS || type == BRACKETS)
+            if (type == PARENS){
+                strcat(out, " function returning ");
             }
-            else
-                strcat(out, " function returning");
-        }
-        else if (type == BRACKETS) {
-            strcat(out, " array");
-            strcat(out, token);
-            strcat(out, " of");
-        }
+            else if (type == BRACKETS) {
+                strcat(out, " array");
+                strcat(out, token);
+                strcat(out, " of");
+            }
+    if (type == '(')
+        dcl();
 }
 
 #define BUFSIZE 100
@@ -183,26 +212,4 @@ void ungetch(int c) /* push character back to input */
         printf("ungetch: too many characters\n");
     else 
         buf[bufp++] = c;
-}
-
-#define MAXVAL 100 /* maximum depth of val stack*/
-int sp = 0;        /* next free stack position*/
-char* val[MAXVAL]; /* value stack*/
-
-void push(char* f)
-{
-    if (sp < MAXVAL)
-        val[sp++] = f;
-    else 
-        printf("error: stack full, can't push %g\n",f);
-}
-
-char* pop(void)
-{
-    if (sp > 0)
-        return val[--sp];
-    else {
-        printf("error: stack empty\n");
-        return "";
-    }
 }

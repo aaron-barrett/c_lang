@@ -19,5 +19,7 @@ int main()
     char (*pfa2[])(char) = {(*retch), (*retch)};
     printf("(%c, %c)\n", (*pfa2[0])('s'), (*pfa2[1])('s'));
 
+    int * const * volatile x;
+
     return 0;
 }

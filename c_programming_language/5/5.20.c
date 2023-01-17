@@ -18,9 +18,10 @@ char out[MAXOUT];             /* output string */
 char argument[MAXOUT];             /* output string */
 
 int datatype_found = 0;
+int name_found = 0;
 // #define MAXKEYWORD 10 // for adding in option for user to input defined datatype, this would mean the "find" functiosn need changing, and this really just substitutes a robust "struct" functionality.
 char* qualifiers[] =    {"const", "volatile", "signed", "unsigned", "short", "long"};
-char* datatypes[]  =    {"int", "double", "float", "char"};
+char* datatypes[]  =    {"int", "double", "float", "char", "void"};
 
 int is_datatype(char s[]){
     for(int i = 0 ; i < sizeof(datatypes) / sizeof(datatypes[0]); i++)
@@ -39,6 +40,7 @@ int is_qualifer(char s[]){
 void clear_output()
 {
     datatype_found = 0;
+    name_found = 0;
     tokentype = 0;
     token[0] = '\0';
     name[0] = '\0';
@@ -117,6 +119,51 @@ int gettoken(void) /* returns next token */
         return tokentype = c;
 }
 
+void internal_func(char* hold)
+{
+    int counter = 0;
+    int type_type;
+    int MAXARG = 50;
+    char hold_type[MAXARG][MAXARG];
+    for(int i = 0 ; i < MAXARG ; i++)
+        hold_type[i][0] = '\0';
+    if (tokentype == TYPE)
+        strcpy(hold_type[counter++], token);
+    while (gettoken() != ')'){
+        if (tokentype == '*')
+            strcpy(hold_type[counter++], " pointer to ");
+        else if (tokentype == QUALIFIER || tokentype == TYPE)
+            strcpy(hold_type[counter++], token);
+        else if (tokentype == ','){
+            while (counter > 0)
+                strcat(hold, hold_type[--counter]);
+            strcat(hold, " and ");
+        }
+        else if (tokentype == '('){
+            char hold_func[100];
+            hold_func[0] = '\0';
+            char return_type[100];
+            if (gettoken() == '*' && gettoken()  == NAME){
+                strcpy(return_type, hold_type[--counter]);
+                strcpy(hold_type[counter], " pointer to function ");
+                strcat(hold_type[counter], token);
+                if (gettoken() == ')' && (type_type = gettoken()) == '('){
+                strcat(hold_type[counter], " passing ");
+                    internal_func(hold_func);
+                    strcat(hold_type[counter], hold_func);
+                }
+                else if (type_type == PARENS){
+                    strcat(hold_type[counter], hold_func);
+                }
+                strcat(hold_type[counter], " returning ");
+                strcat(hold_type[counter++], return_type);
+            }
+        }
+    }
+    while (counter > 0)
+        strcat(hold, hold_type[--counter]);
+}
+
 /* dcl: parse a declarator */
 void dcl(void)
 {
@@ -139,28 +186,12 @@ void dirdcl(void)
             printf("type %d\n", tokentype);
         }
     }
-    else if (tokentype == NAME)
+    else if (tokentype == NAME){
+        name_found = 1;
         strcpy(name, token);
-    else if (tokentype == TYPE){ /*this does not handle the initial return type which is different */
-        int MAXARG = 20;
-        char hold_type[MAXARG][MAXARG];
-        for(int i = 0 ; i < MAXARG ; i++)
-            hold_type[i][0] = '\0';
-        int counter = 0;
-        strcpy(hold_type[counter++], token);
-        while (gettoken() != ')'){
-            if (tokentype == '*')
-                strcpy(hold_type[counter++], " pointer to ");
-            else if (tokentype == QUALIFIER || tokentype == TYPE)
-                strcpy(hold_type[counter++], token);
-            else if (tokentype == ','){
-                while (counter > 0)
-                    strcat(argument, hold_type[--counter]);
-                strcat(argument, " and ");
-            }
-        }
-        while (counter > 0)
-            strcat(argument, hold_type[--counter]);
+    }
+    else if (tokentype == TYPE ){ /*this does not handle the initial return type which is different */
+        internal_func(argument);
         dirdcl();
     }
     else if (tokentype == QUALIFIER){ /* only works for qualifiers for main type */

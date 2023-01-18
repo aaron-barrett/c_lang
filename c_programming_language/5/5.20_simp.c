@@ -16,8 +16,8 @@ int is_qualifer(char s[]);
 void remove_space(char s[]);
 void clear_output();
 
-void dcl(char* out, char* name, char* argument, char* datatype);
-void dirdcl(char* out, char* name, char* argument, char* datatype);
+void dcl(char* out, char* name, char* argument);
+void dirdcl(char* out, char* name, char* argument);
 void func_args(char* hold);
 void obtain_return_type(char* hold);
 int gettoken(void); 
@@ -43,7 +43,7 @@ int main()
     clear_output();
     while (gettoken() != EOF){
         obtain_return_type(datatype_master); /* obtains the type */
-        dirdcl(out_master, name_master, argument_master, datatype_master);
+        dirdcl(out_master, name_master, argument_master);
         if (tokentype != '\n')
             printf("syntax error\t tokentype: %c\n", tokentype);
         strcat(final_output,name_master);
@@ -139,7 +139,7 @@ void func_args(char* hold)
         obtain_return_type(hold_type); /* obtains the type */
         /* this is the recursive call if a function argument is itself a complex declaration, i.e., we need the code already used in dir & dirdcl, we start this recursion in dirdcl because we start with a '(' tokentype */
         if (tokentype != ',' && tokentype != ')'){ /* only call dirdcl if there are more function arguments; this means you will have a name and out field as well*/
-            dirdcl(hold_out, hold_name, hold_argument, hold_type);
+            dirdcl(hold_out, hold_name, hold_argument);
             strcpy(hold_args, "\"");
             strcat(hold_args, hold_name);
             strcat(hold_args, "\"");
@@ -160,22 +160,22 @@ void func_args(char* hold)
 }
 
 /* dcl: parse a declarator */
-void dcl(char* out, char* name, char* argument, char* datatype)
+void dcl(char* out, char* name, char* argument)
 {
     int ns;
     for(ns = 0; gettoken() == '*'; ) /* count *'s */
         ns++;
-    dirdcl(out,name,argument,datatype);
+    dirdcl(out,name,argument);
     while(ns-- > 0)
         strcat(out, " pointer to ");
 }
 
 /* dirdcl: parse a direct declarator */
-void dirdcl(char* out, char* name, char* argument, char* datatype)
+void dirdcl(char* out, char* name, char* argument)
 {
     int type;
     if (tokentype == '('){
-        dcl(out,name,argument,datatype);
+        dcl(out,name,argument);
         if(tokentype != ')'){
             printf("error missing ')' \n");
             printf("type %d\n", tokentype);
@@ -208,7 +208,7 @@ void dirdcl(char* out, char* name, char* argument, char* datatype)
             }
     if (type == '('){ /*detects function arguments. */
         func_args(argument);
-        dirdcl(out,name,argument,datatype); // tokentype should now be ')', so dirdcl needs to be called again to finish.
+        dirdcl(out,name,argument); // tokentype should now be ')', so dirdcl needs to be called again to finish.
     }
 }
 

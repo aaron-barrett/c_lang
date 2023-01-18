@@ -41,8 +41,8 @@ char final_output[MAXTOKEN];             /* output string */
 
 int main()
 {
-    clear_output();
     while (gettoken() != EOF){
+        clear_output();
         obtain_return_type(datatype_master); /* obtains the type */
         dirdcl(out_master, name_master, argument_master);
         if (tokentype != '\n')
@@ -53,7 +53,6 @@ int main()
         strcat(final_output, datatype_master);
         remove_space(final_output);
         printf("%s\n",final_output);
-        clear_output();
     }
     return 0;
 }

@@ -117,9 +117,8 @@ void func_args(char* hold)
         /* this only counts back potential " pointer to "'s and qualifiers for the return type of the function pointer, just like the initial call in main */
         dirdcl(hold_out, hold_name, hold_argument, hold_type);
         /* this is the recursive call if a function argument is itself a complex declaration, i.e., we need the code already used in dir & dirdcl, we start this recursion in dirdcl because we start with a '(' tokentype */
-        if (tokentype != ',' && tokentype != ')') /* only called if there are more function arguments*/
+        if (tokentype != ',' && tokentype != ')'){ /* only call dirdcl if there are more function arguments; this means you will have a name and out field as well*/
             dirdcl(hold_out, hold_name, hold_argument, hold_type);
-        if (strcmp(hold_name, "") != 0){
             strcpy(hold_args, "\"");
             strcat(hold_args, hold_name);
             strcat(hold_args, "\"");
@@ -128,11 +127,9 @@ void func_args(char* hold)
             strcat(hold_args, hold_type);
             strcat(hold_args, ",");
         }
-        else {
-            strcpy(hold_args, hold_out);
-            strcat(hold_args, hold_type);
-        }
-        strcat(hold, hold_args);
+        else 
+            strcpy(hold_args, hold_type);
+        strcat(hold, hold_args); /* this saves the hold_args to the hold string, which is the outut of this function */
         /* the below are three corner cases when you are finished with the recursion for this function pointer argument */
         if (tokentype == ')') /* avoids an off by one error by call gettoken() in the while statment*/
             break;

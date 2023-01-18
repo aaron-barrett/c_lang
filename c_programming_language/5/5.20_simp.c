@@ -185,19 +185,16 @@ void dirdcl(char* out, char* name, char* argument)
         strcpy(name, token);
     else if (tokentype == ',') /* used when dirdcl is used for function arguments */
         return;
-    else {
-        printf("error :expected name or (dcl)\n");
-        printf("type %c\n", tokentype);
-    }
-    // if (tokentype != '\n')
-        while ((type = gettoken())  == PARENS || type == BRACKETS)
-            if (type == PARENS)
-                strcat(out, " function passing nothing returning ");
-            else if (type == BRACKETS) {
-                strcat(out, " array");
-                strcat(out, token);
-                strcat(out, " of ");
-            }
+    else 
+        printf("error :expected name or (dcl)\ttokentyp = %c\n", tokentype);
+    while ((type = gettoken())  == PARENS || type == BRACKETS)
+        if (type == PARENS)
+            strcat(out, " function passing nothing returning ");
+        else if (type == BRACKETS) {
+            strcat(out, " array");
+            strcat(out, token);
+            strcat(out, " of ");
+        }
     if (type == '('){ /*detects function arguments. */
         func_args(argument);
         if (tokentype == ')'){

@@ -159,7 +159,7 @@ void func_args(char* hold)
     }
 }
 
-/* dcl: parse a declarator */
+/* dcl: parse a declarator; NOTE: this now only handles pointers to functions */
 void dcl(char* out, char* name, char* argument)
 {
     int ns;

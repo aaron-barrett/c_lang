@@ -6,5 +6,6 @@ int main()
     void (*com)(char (*(*x())[])());
     void (*c)(char (*(*x())[])(), void (*signal(int, void* (*fp)(int)))(int));
     void (**d)(int,int);
+    void (**de[])(int,int);
     return 0;
 }

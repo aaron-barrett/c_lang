@@ -33,6 +33,7 @@ char final_output[MAXTOKEN];             /* output string */
 /*  Fun test examples
     int (*x)(int*const,void*(*y)(int))
     char (*(*x())[])()
+    void (**de[])(int,int);
     void (*signal(int, void* (*fp)(int)))(int)
     void (*c)(char (*(*x())[])(), void (*signal(int, void* (*fp)(int)))(int))
     void (*complex)(void (*com)(char (*(*x())[])()), void (*signal(int, void* (*fp)(int)))(int))

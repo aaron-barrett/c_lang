@@ -19,6 +19,7 @@ void clear_output();
 void dcl(char* out, char* name, char* argument, char* datatype);
 void dirdcl(char* out, char* name, char* argument, char* datatype);
 void func_args(char* hold);
+void obtain_return_type(char* hold);
 int gettoken(void); 
 
 int tokentype;              /* type of last token */
@@ -41,7 +42,7 @@ int main()
 {
     clear_output();
     while (gettoken() != EOF){
-        dirdcl(out_master, name_master, argument_master, datatype_master); /* obtains the type */
+        obtain_return_type(datatype_master); /* obtains the type */
         dirdcl(out_master, name_master, argument_master, datatype_master);
         if (tokentype != '\n')
             printf("syntax error\t tokentype: %c\n", tokentype);
@@ -100,6 +101,26 @@ int gettoken(void) /* returns next token */
         return tokentype = c;
 }
 
+void obtain_return_type(char* hold)
+{
+    char datatype_hold[MAXARG][MAXTOKEN];
+    for(int i = 0 ; i < MAXARG; i ++)
+        datatype_hold[i][0] = '\0';
+    int counter = 0;
+    strcpy(datatype_hold[counter++],token);
+    while (gettoken() == '*' || tokentype == QUALIFIER){
+        if (tokentype == QUALIFIER){
+            strcat(token, " ");
+            strcpy(datatype_hold[counter++],token);
+        }
+        else
+            strcpy(datatype_hold[counter++]," pointer to ");
+    }
+    while (counter > 0 )
+        strcat(hold, datatype_hold[--counter]);
+    /* tokentype should now be NAME or '(' */
+}
+
 /* parse function arguments */
 void func_args(char* hold)
 {
@@ -115,7 +136,7 @@ void func_args(char* hold)
         hold_argument[0] = '\0';
         hold_out[0] = '\0';
         /* this only counts back potential " pointer to "'s and qualifiers for the return type of the function pointer, just like the initial call in main */
-        dirdcl(hold_out, hold_name, hold_argument, hold_type);
+        obtain_return_type(hold_type); /* obtains the type */
         /* this is the recursive call if a function argument is itself a complex declaration, i.e., we need the code already used in dir & dirdcl, we start this recursion in dirdcl because we start with a '(' tokentype */
         if (tokentype != ',' && tokentype != ')'){ /* only call dirdcl if there are more function arguments; this means you will have a name and out field as well*/
             dirdcl(hold_out, hold_name, hold_argument, hold_type);
@@ -162,32 +183,11 @@ void dirdcl(char* out, char* name, char* argument, char* datatype)
     }
     else if (tokentype == NAME)
         strcpy(name, token);
-    else if (tokentype == TYPE ){ /* this detects the return type complete with qualifiers and pointer options */
-        char datatype_hold[20][20];
-        for(int i = 0 ; i < 20; i ++)
-            datatype_hold[i][0] = '\0';
-        int counter = 0;
-        strcpy(datatype_hold[counter++],token);
-        while (gettoken() == '*' || tokentype == QUALIFIER){
-            if (tokentype == QUALIFIER){
-                strcat(token, " ");
-                strcpy(datatype_hold[counter++],token);
-            }
-            else
-                strcpy(datatype_hold[counter++]," pointer to ");
-        }
-        while (counter > 0 )
-            strcat(datatype, datatype_hold[--counter]);
-        /* tokentype should now be NAME or '(' */
-        return; /* yes, this is essentially separate from any recursive call*/
-    }
     else if (tokentype == ')'){ /* bookends the call which detects function arguements, i.e., this breaks out of detecting function arguments for good.*/
-        if (strcmp(argument, "\0") != 0){
-            strcat(out, " function passing ");
-            strcat(out, argument);
-            argument[0] = '\0';
-            strcat(out, " returning ");
-        }
+        strcat(out, " function passing ");
+        strcat(out, argument);
+        argument[0] = '\0';
+        strcat(out, " returning ");
         gettoken(); /* obtains the next token. because returning to another dirdcl, get next token befor returning. */
         return; /* this seems spurious: this is the true bookend, essentially allowing us to resuse the exact functionality without function arguments.*/
     }

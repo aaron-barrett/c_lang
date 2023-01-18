@@ -16,8 +16,8 @@ int is_qualifer(char s[]);
 void remove_space(char s[]);
 void clear_output();
 
-void dcl(char* out, char* name, char* argument);
-void dirdcl(char* out, char* name, char* argument);
+void dcl(char* out, char* name, char* argument, char* datatype);
+void dirdcl(char* out, char* name, char* argument, char* datatype);
 void func_args(char* hold);
 int gettoken(void); 
 
@@ -41,8 +41,8 @@ int main()
 {
     clear_output();
     while (gettoken() != EOF){
-        strcat(datatype_master, token);
-        dcl(out_master, name_master, argument_master);
+        dirdcl(out_master, name_master, argument_master, datatype_master); /* obtains the type */
+        dirdcl(out_master, name_master, argument_master, datatype_master);
         if (tokentype != '\n')
             printf("syntax error\t tokentype: %c\n", tokentype);
         strcat(final_output,name_master);
@@ -103,76 +103,61 @@ int gettoken(void) /* returns next token */
 /* parse function arguments */
 void func_args(char* hold)
 {
-    int counter = 0;
-    char hold_args[MAXARG][MAXTOKEN];
-    for(int i = 0 ; i < MAXARG ; i++)
-        hold_args[i][0] = '\0';
-    if (tokentype == TYPE)
-        strcpy(hold_args[counter++], token);
-    while (gettoken() != ')')
-        if (tokentype == '*')
-            strcpy(hold_args[counter++], " pointer to ");
-        else if (tokentype == QUALIFIER)
-            strcpy(hold_args[counter++], token);
-        else if (tokentype == TYPE)
-            strcpy(hold_args[counter++], token);
-        else if (tokentype == ','){ /* this clears out everything saved for a particular agument type once we move to the next one */
-            while (counter > 0)
-                strcat(hold, hold_args[--counter]);
+    char hold_args[MAXTOKEN];
+    hold_args[0] = '\0';
+    while (gettoken() != ')'){
+        char hold_type[MAXTOKEN];
+        char hold_name[MAXTOKEN];
+        char hold_argument[MAXTOKEN];
+        char hold_out[MAXTOKEN];
+        hold_type[0] = '\0';
+        hold_name[0] = '\0';
+        hold_argument[0] = '\0';
+        hold_out[0] = '\0';
+        /* this only counts back potential " pointer to "'s and qualifiers for the return type of the function pointer, just like the initial call in main */
+        dirdcl(hold_out, hold_name, hold_argument, hold_type);
+        /* this is the recursive call if a function argument is itself a complex declaration, i.e., we need the code already used in dir & dirdcl, we start this recursion in dirdcl because we start with a '(' tokentype */
+        if (tokentype != ',' && tokentype != ')') /* only called if there are more function arguments*/
+            dirdcl(hold_out, hold_name, hold_argument, hold_type);
+        if (strcmp(hold_name, "") != 0){
+            strcpy(hold_args, "\"");
+            strcat(hold_args, hold_name);
+            strcat(hold_args, "\"");
+            strcat(hold_args, ",");
+            strcat(hold_args, hold_out);
+            strcat(hold_args, hold_type);
+            strcat(hold_args, ",");
+        }
+        else {
+            strcpy(hold_args, hold_out);
+            strcat(hold_args, hold_type);
+        }
+        strcat(hold, hold_args);
+        /* the below are three corner cases when you are finished with the recursion for this function pointer argument */
+        if (tokentype == ')') /* avoids an off by one error by call gettoken() in the while statment*/
+            break;
+        if (tokentype == ',') /* handles case where the function pointer is not the last agument*/
             strcat(hold, " and ");
-        }
-        else if (tokentype == '('){ /* this case is all for function pointers. this calls the main recursion routines for this function pointer. good luck*/
-            char hold_type[MAXTOKEN];
-            char hold_name[MAXTOKEN];
-            char hold_argument[MAXTOKEN];
-            char hold_out[MAXTOKEN];
-            hold_type[0] = '\0';
-            hold_name[0] = '\0';
-            hold_argument[0] = '\0';
-            hold_out[0] = '\0';
-            /* this only counts back potential " pointer to "'s and qualifiers for the return type of the function pointer */
-            strcpy(hold_type, hold_args[--counter]);
-            while (counter > 0)
-                strcat(hold_type, hold_args[--counter]);
-            /* this is the recursive call if a function argument is itself a complex declaration, i.e., we need the code already used in dir & dirdcl, we start this recursion in dirdcl because we start with a '(' tokentype */
-            dirdcl(hold_out, hold_name, hold_argument);
-            strcpy(hold_args[counter], "\"");
-            strcat(hold_args[counter], hold_name);
-            strcat(hold_args[counter], "\"");
-            strcat(hold_args[counter], ",");
-            strcat(hold_args[counter], hold_out);
-            strcat(hold_args[counter], hold_type);
-            strcat(hold_args[counter++], ",");
-            /* the below are two corner cases when you are finished with the recursion for this function pointer argument */
-            if (tokentype == ')')/* avoids an off by one error by call gettoken() in the while statment*/
-                break;
-            if (tokentype == ','){ /* handles case where the function pointer is not the last agument*/
-                while (counter > 0)
-                    strcat(hold, hold_args[--counter]);
-                strcat(hold, " and ");
-            }
-        }
-    while (counter > 0)
-        strcat(hold, hold_args[--counter]);
+    }
 }
 
 /* dcl: parse a declarator */
-void dcl(char* out, char* name, char* argument)
+void dcl(char* out, char* name, char* argument, char* datatype)
 {
     int ns;
     for(ns = 0; gettoken() == '*'; ) /* count *'s */
         ns++;
-    dirdcl(out,name,argument);
+    dirdcl(out,name,argument,datatype);
     while(ns-- > 0)
         strcat(out, " pointer to ");
 }
 
 /* dirdcl: parse a direct declarator */
-void dirdcl(char* out, char* name, char* argument)
+void dirdcl(char* out, char* name, char* argument, char* datatype)
 {
     int type;
     if (tokentype == '('){
-        dcl(out,name,argument);
+        dcl(out,name,argument,datatype);
         if(tokentype != ')'){
             printf("error missing ')' \n");
             printf("type %d\n", tokentype);
@@ -180,16 +165,24 @@ void dirdcl(char* out, char* name, char* argument)
     }
     else if (tokentype == NAME)
         strcpy(name, token);
-    else if (tokentype == TYPE ){ /*this does not handle the initial return type which is different; this is used ONLY for function arguments.*/
-        func_args(argument);
-        dirdcl(out,name,argument);
-    }
-    else if (tokentype == QUALIFIER){  /* only used for qualifiers for output type */
-        char datatype_hold[10];
-        strcpy(datatype_hold,token);
-        strcat(datatype_hold," ");
-        dcl(out,name,argument);
-        strcat(out, datatype_hold);
+    else if (tokentype == TYPE ){ /* this detects the return type complete with qualifiers and pointer options */
+        char datatype_hold[20][20];
+        for(int i = 0 ; i < 20; i ++)
+            datatype_hold[i][0] = '\0';
+        int counter = 0;
+        strcpy(datatype_hold[counter++],token);
+        while (gettoken() == '*' || tokentype == QUALIFIER){
+            if (tokentype == QUALIFIER){
+                strcat(token, " ");
+                strcpy(datatype_hold[counter++],token);
+            }
+            else
+                strcpy(datatype_hold[counter++]," pointer to ");
+        }
+        while (counter > 0 )
+            strcat(datatype, datatype_hold[--counter]);
+        /* tokentype should now be NAME or '(' */
+        return; /* yes, this is essentially separate from any recursive call*/
     }
     else if (tokentype == ')'){ /* bookends the call which detects function arguements, i.e., this breaks out of detecting function arguments for good.*/
         if (strcmp(argument, "\0") != 0){
@@ -198,13 +191,16 @@ void dirdcl(char* out, char* name, char* argument)
             argument[0] = '\0';
             strcat(out, " returning ");
         }
+        gettoken(); /* obtains the next token. because returning to another dirdcl, get next token befor returning. */
         return; /* this seems spurious: this is the true bookend, essentially allowing us to resuse the exact functionality without function arguments.*/
     }
+    else if (tokentype == ',') /* used when dirdcl is used for function arguments */
+        return;
     else {
         printf("error :expected name or (dcl)\n");
         printf("type %c\n", tokentype);
     }
-    if (tokentype != '\n')
+    // if (tokentype != '\n')
         while ((type = gettoken())  == PARENS || type == BRACKETS)
             if (type == PARENS)
                 strcat(out, " function passing nothing returning ");
@@ -213,9 +209,9 @@ void dirdcl(char* out, char* name, char* argument)
                 strcat(out, token);
                 strcat(out, " of ");
             }
-    if (type == '('){ /* initiall detects function arguments.*/
-        gettoken(); /* in this case, we merely needed to call gettoken() again; dcl(out,name,argument) can replace gettoken() & dirdcl(out,name,argument), but checking for pointers here is unnecessary with out input assumptions */
-        dirdcl(out,name,argument);
+    if (type == '('){ /*detects function arguments. */
+        func_args(argument);
+        dirdcl(out,name,argument,datatype); // tokentype should now be ')', so dirdcl needs to be called again to finish.
     }
 }
 

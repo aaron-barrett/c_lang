@@ -183,14 +183,6 @@ void dirdcl(char* out, char* name, char* argument)
     }
     else if (tokentype == NAME)
         strcpy(name, token);
-    else if (tokentype == ')'){ /* bookends the call which detects function arguements, i.e., this breaks out of detecting function arguments for good.*/
-        strcat(out, " function passing ");
-        strcat(out, argument);
-        argument[0] = '\0';
-        strcat(out, " returning ");
-        gettoken(); /* obtains the next token. because returning to another dirdcl, get next token befor returning. */
-        return; /* this seems spurious: this is the true bookend, essentially allowing us to resuse the exact functionality without function arguments.*/
-    }
     else if (tokentype == ',') /* used when dirdcl is used for function arguments */
         return;
     else {
@@ -208,7 +200,15 @@ void dirdcl(char* out, char* name, char* argument)
             }
     if (type == '('){ /*detects function arguments. */
         func_args(argument);
-        dirdcl(out,name,argument); // tokentype should now be ')', so dirdcl needs to be called again to finish.
+        if (tokentype == ')'){
+            strcat(out, " function passing ");
+            strcat(out, argument);
+            argument[0] = '\0';
+            strcat(out, " returning ");
+            gettoken(); /* obtains the next token.*/
+        }
+        else 
+            printf("Syntax error in function argument.\n");
     }
 }
 

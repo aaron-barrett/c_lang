@@ -121,6 +121,8 @@ void qsort_(void* v[], int left, int right, int (*comp)(void*, void*))
         return ;
     if (strstr(v[(left + right)/2], sorting_field) == NULL) /* handles if consecutive fields don't overlap*/
         return;
+    if (strstr(v[left], sorting_field) == NULL)
+        return ;
     swap(v,left,(left+right)/2);
     last = left;
     for(i = left+1; i<= right; i++){

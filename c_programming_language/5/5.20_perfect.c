@@ -35,7 +35,6 @@ char final_output[MAXTOKEN];             /* output string */
     void (*signal(int, void* (*fp)(int)))(int)
     void (*c)(char (*(*x())[])(), void (*signal(int, void* (*fp)(int)))(int))
     void (*complex)(void (*com)(char (*(*x())[])()), void (*signal(int, void* (*fp)(int)))(int))
-
 */
 
 int main()
@@ -123,7 +122,7 @@ void func_args(char* hold)
                 strcat(hold, hold_args[--counter]);
             strcat(hold, " and ");
         }
-        else if (tokentype == '('){ /* this case is all for function pointers. good luck*/
+        else if (tokentype == '('){ /* this case is all for function pointers. this calls the main recursion routines for this function pointer. good luck*/
             char hold_type[MAXTOKEN];
             char hold_name[MAXTOKEN];
             char hold_argument[MAXTOKEN];

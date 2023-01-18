@@ -186,7 +186,7 @@ void dirdcl(char* out, char* name, char* argument)
     else if (tokentype == ',') /* used when dirdcl is used for function arguments */
         return;
     else 
-        printf("error :expected name or (dcl)\ttokentyp = %c\n", tokentype);
+        printf("error :expected name or (dcl)\ttokentype = %c\n", tokentype);
     while ((type = gettoken())  == PARENS || type == BRACKETS)
         if (type == PARENS)
             strcat(out, " function passing nothing returning ");

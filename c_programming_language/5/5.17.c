@@ -119,10 +119,19 @@ void qsort_(void* v[], int left, int right, int (*comp)(void*, void*))
     void determine_field(char* v1, char* v2, char* s, char* t, char* field, char* next_field);
     if (left >= right)
         return ;
-    if (strstr(v[(left + right)/2], sorting_field) == NULL) /* handles if consecutive fields don't overlap*/
-        return;
-    if (strstr(v[left], sorting_field) == NULL)
-        return ;
+    if (strcmp(past_sorting_field, "") != 0){ /* checks that the pivot element isn't already in place according to previous field*/
+        char s[100];
+        char t[100];
+        determine_field(v[(left + right)/2], v[left], s, t, past_sorting_field, sorting_field);
+        printf("%s\t%s\n", v[(left + right)/2], v[left]);
+        printf("%s\t%s\n",s,t);
+        if (s[0] == '\0' || t[0] == '\0')
+            return;
+        if ((*comp)(s, t) != 0){
+            printf("HERE\n");
+            return;
+        }
+    }
     swap(v,left,(left+right)/2);
     last = left;
     for(i = left+1; i<= right; i++){

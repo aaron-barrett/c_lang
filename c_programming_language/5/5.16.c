@@ -97,44 +97,42 @@ int numcmp(char* s1, char* s2)
         return 0;
 }
 
-/* performs a comparison if fold option is chosen by comparing lower cases of relevant characters */
-int compare_if_fold(char s, char t)
+void directory_filter(char *s)
 {
-    if ( ((s <= 'z' && s >= 'a') || (s <= 'Z' && s >= 'A')) &&
-     ((t <= 'z' && t >= 'a') || (t <= 'Z' && t >= 'A')) )
-     return (tolower(s) == tolower(t));
-    
+    int k = 0;
+    for(int i = 0 ; s[i] != '\0'; i++ )
+        while ((isalnum(s[i]) == 0 && isspace(s[i]) == 0) && s[i] != '\0')
+            for(k = i ; s[k] != '\0' ; k++)
+                s[k] = s[k+1];
 }
 
-int compare_if_directory(char s, char t)
-{
-    return (isalpha(s) || isdigit(s) || isspace(s)) && (isalpha(t) || isdigit(t) || isspace(t));
-}
-
-int to_skip(char s, char t)
-{
-    int skip = fold + directory;
-    if (skip != 0){
-        skip = 0;
-        if (fold)
-            skip += compare_if_fold(s, t);
-        if (directory)
-            skip += compare_if_directory(s,t);
-    }
-    return skip;
-}
-
-/* strcmp_: return <0 if s<t, 0 if s==t, >0 if s>t */
 int strcmp_(char* s, char* t)
 {
     int i;
-    for(i = 0; s[i] == t[i] || to_skip(s[i], t[i]); i++)
-        if (s[i] == '\0')
-            return 0;
-    if (fold == 1)
-        return tolower(s[i]) - tolower(t[i]);
-    return s[i] - t[i];
-
+    char ss[100];
+    char tt[100];
+    strcpy(ss,s);
+    strcpy(tt,t);
+    if (directory == 1){
+        directory_filter(ss);
+        directory_filter(tt);
+        printf("s = %s\n",ss);
+        printf("ss = %s\n",ss);
+        printf("t = %s\n",tt);
+        printf("tt = %s\n",tt);
+    }
+    if (fold == 1){
+        for(i = 0; (tolower(ss[i]) == tolower(tt[i])) ; i++)
+            if (ss[i] == '\0')
+                return 0;
+        return tolower(ss[i]) - tolower(tt[i]);
+    }
+    else {
+        for(i = 0; ss[i] == tt[i] ; i++)
+            if (ss[i] == '\0')
+                return 0;
+        return ss[i] - tt[i];
+    }
 }
 
 void swap(void* v[], int i, int j)

@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#define MAXLINES 5000
+#define MAXLINES 5000 /* max input lines */
+#define MAXLEN 1000 /* max length of any input line */
 char* lineptr[MAXLINES];
 char sorting_field[100];
 char next_sorting_field[100];
@@ -12,17 +13,25 @@ char past_sorting_field[100];
 int readlines(char* lineptr[], int nlines);
 void writelines(char* lineptr[], int nlines);
 
-void qsort_(void* lineptr[], int left, int right, int (*comp)(void*, void*));
-int numcmp(char*, char*);
-int strcmp_(char*, char*);
+void qsort_(void* lineptr[], int left, int right, int (*comp)(void*, void*,int,int));
+int numcmp(char*, char*,int,int);
+int strcmp_(char*, char*,int,int);
 
 int numeric = 0;
 int reverse = 0;
 int fold = 0;
 int directory = 0;
+int numeric_past = 0;
+int reverse_past = 0;
+int fold_past = 0;
+int directory_past = 0;
 
 void reset_options()
 {
+    numeric_past = numeric;
+    reverse_past = reverse;
+    fold_past = fold;
+    directory_past = directory;
     numeric = 0;
     reverse = 0;
     fold = 0;
@@ -64,7 +73,7 @@ int main(int argc, char* argv[])
         return 1;
     }
     if (argc == 1){
-        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*))(numeric ? numcmp : strcmp_));
+        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*,int,int))(numeric ? numcmp : strcmp_));
         writelines(lineptr, nlines);
         return 0;
     }
@@ -99,19 +108,19 @@ int main(int argc, char* argv[])
             strcpy(next_sorting_field,argv[i]);
         else
             strcpy(next_sorting_field,"");
-        // print_operation();
-        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*))(numeric ? numcmp : strcmp_));
-        // writelines(lineptr, nlines);
+        qsort_((void**) lineptr, 0, nlines-1, (int(*)(void*, void*,int,int))(numeric ? numcmp : strcmp_));
+        printf("After sort on field %s\n", sorting_field);
+        writelines(lineptr, nlines);
         strcpy(past_sorting_field,sorting_field);
         reset_options();
     }
-    writelines(lineptr, nlines);
+    // writelines(lineptr, nlines);
     
     return 0;
 }
 
 /* qsort_: sort v[left]...v[right] into increasing order */
-void qsort_(void* v[], int left, int right, int (*comp)(void*, void*))
+void qsort_(void* v[], int left, int right, int (*comp)(void*, void*,int,int))
 {
     int i, last;
     int to_swap = 0;
@@ -119,44 +128,24 @@ void qsort_(void* v[], int left, int right, int (*comp)(void*, void*))
     void determine_field(char* v1, char* v2, char* s, char* t, char* field, char* next_field);
     if (left >= right)
         return ;
-    if (strcmp(past_sorting_field, "") != 0){ /* checks that the pivot element isn't already in place according to previous field*/
-        char s[100];
-        char t[100];
-        determine_field(v[(left + right)/2], v[left], s, t, past_sorting_field, sorting_field);
-        printf("%s\t%s\n", v[(left + right)/2], v[left]);
-        printf("%s\t%s\n",s,t);
-        if (s[0] == '\0' || t[0] == '\0')
-            return;
-        if ((*comp)(s, t) != 0){
-            printf("HERE\n");
-            return;
-        }
-    }
-    swap(v,left,(left+right)/2);
-    last = left;
+    last = left; /* sets pivot element */
+    char s[100];
+    char t[100];
     for(i = left+1; i<= right; i++){
-        char s[100];
-        char t[100];
-        if (strcmp(past_sorting_field, "") != 0){
+        if (strcmp(past_sorting_field, "") != 0){ /* checks that both elements are sorted according to past criterion */
             determine_field(v[i], v[left], s, t, past_sorting_field, sorting_field);
-            printf("%s\t%s\n", v[i], v[left]);
-            printf("%s\t%s\n",s,t);
-            if (s[0] == '\0' || t[0] == '\0')
+            if ((*comp)(s, t, fold_past, directory_past) != 0)
                 continue;
-            if ((*comp)(s, t) != 0){
-                printf("HERE\n");
-               continue;
-            }
         }
         determine_field(v[i], v[left], s, t, sorting_field, next_sorting_field);
-        if (s[0] == '\0' || t[0] == '\0')
+        if (s[0] == '\0' || t[0] == '\0') /* checks that both elements contain the sorting element */
             continue;
         if (reverse == 0){
-            if ((*comp)(s, t) < 0)
+            if ((*comp)(s, t, fold, directory) < 0)
                 to_swap = 1;
         }
         else if (reverse == 1){
-            if ((*comp)(s, t) > 0)
+            if ((*comp)(s, t, fold, directory) > 0)
                 to_swap = 1;
         }
         if (to_swap == 1)
@@ -184,14 +173,26 @@ void determine_field(char* v1, char* v2, char s[], char t[], char field[], char 
             s_start++;
             t_start++;
         }
-        int i = 0;
-        while(s_start < s_next)
-            s[i++] = *s_start++;
-        s[i] = '\0';
-        i = 0;
-        while(t_start < t_next)
-            t[i++] = *t_start++;
-        t[i] = '\0';
+        if (s_next == NULL || t_next == NULL){
+            int i = 0;
+            while (*s_start != '\0')
+                s[i++] = *s_start++;
+            s[i] = '\0';
+            i = 0;
+            while (*t_start != '\0')
+                t[i++] = *t_start++;
+            t[i] = '\0';
+        }
+        else {
+            int i = 0;
+            while(s_start < s_next)
+                s[i++] = *s_start++;
+            s[i] = '\0';
+            i = 0;
+            while(t_start < t_next)
+                t[i++] = *t_start++;
+            t[i] = '\0';
+        }
     }
     else {
         for(int i = 0 ; i < strlen(field); i++){
@@ -211,11 +212,15 @@ void determine_field(char* v1, char* v2, char s[], char t[], char field[], char 
 
 /* numcmp: compars s1 and s2 numerically */
 /* strings without leading numbers are cast as 0.0 in atof() */
-int numcmp(char* s1, char* s2)
+int numcmp(char* s1, char* s2, int fold, int directory)
 {
     double v1, v2;
+    printf("s1 = %s\n", s1);
+    printf("s2 = %s\n", s2);
     v1 = atof(s1);
     v2 = atof(s2);
+    printf("v1 = %f\n", v1);
+    printf("v2 = %f\n", v2);
     if (v1 < v2)
         return -1;
     else if (v1 > v2)
@@ -224,44 +229,42 @@ int numcmp(char* s1, char* s2)
         return 0;
 }
 
-/* performs a comparison if fold option is chosen by comparing lower cases of relevant characters */
-int compare_if_fold(char s, char t)
+void directory_filter(char *s)
 {
-    if ( ((s <= 'z' && s >= 'a') || (s <= 'Z' && s >= 'A')) &&
-     ((t <= 'z' && t >= 'a') || (t <= 'Z' && t >= 'A')) )
-     return (tolower(s) == tolower(t));
-    
+    int k = 0;
+    for(int i = 0 ; s[i] != '\0'; i++ )
+        while ((isalnum(s[i]) == 0 && isspace(s[i]) == 0) && s[i] != '\0')
+            for(k = i ; s[k] != '\0' ; k++)
+                s[k] = s[k+1];
 }
 
-int compare_if_directory(char s, char t)
-{
-    return (isalpha(s) || isdigit(s) || isspace(s)) && (isalpha(t) || isdigit(t) || isspace(t));
-}
-
-int to_skip(char s, char t)
-{
-    int skip = fold + directory;
-    if (skip != 0){
-        skip = 0;
-        if (fold)
-            skip += compare_if_fold(s, t);
-        if (directory)
-            skip += compare_if_directory(s,t);
-    }
-    return skip;
-}
-
-/* strcmp_: return <0 if s<t, 0 if s==t, >0 if s>t */
-int strcmp_(char* s, char* t)
+int strcmp_(char* s, char* t, int f, int d)
 {
     int i;
-    for(i = 0; s[i] == t[i] || to_skip(s[i], t[i]); i++)
-        if (s[i] == '\0')
-            return 0;
-    if (fold == 1)
-        return tolower(s[i]) - tolower(t[i]);
-    return s[i] - t[i];
-
+    char ss[MAXLEN];
+    char tt[MAXLEN];
+    strcpy(ss,s);
+    strcpy(tt,t);
+    if (d == 1){
+        directory_filter(ss);
+        directory_filter(tt);
+        printf("s = %s\n",ss);
+        printf("ss = %s\n",ss);
+        printf("t = %s\n",tt);
+        printf("tt = %s\n",tt);
+    }
+    if (f == 1){
+        for(i = 0; (tolower(ss[i]) == tolower(tt[i])) ; i++)
+            if (ss[i] == '\0')
+                return 0;
+        return tolower(ss[i]) - tolower(tt[i]);
+    }
+    else {
+        for(i = 0; ss[i] == tt[i] ; i++)
+            if (ss[i] == '\0')
+                return 0;
+        return ss[i] - tt[i];
+    }
 }
 
 void swap(void* v[], int i, int j)
@@ -272,7 +275,6 @@ void swap(void* v[], int i, int j)
     v[j] = temp;
 }
 
-#define MAXLEN 1000 /* max length of any input line */
 int getlines(char*, int);
 char* alloc(int);
 /* readlines: read input lines */
@@ -329,9 +331,3 @@ char* alloc (int n) /* return pointer to n characters */
     else 
         return 0;
 }
-
-/* Test case */
-// chap2sec2
-// chap1sec2
-// chap1sec1
-// chap2sec1

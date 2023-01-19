@@ -248,10 +248,6 @@ int strcmp_(char* s, char* t, int f, int d)
     if (d == 1){
         directory_filter(ss);
         directory_filter(tt);
-        printf("s = %s\n",ss);
-        printf("ss = %s\n",ss);
-        printf("t = %s\n",tt);
-        printf("tt = %s\n",tt);
     }
     if (f == 1){
         for(i = 0; (tolower(ss[i]) == tolower(tt[i])) ; i++)

@@ -111,7 +111,7 @@ void obtain_return_type(char* hold)
         datatype_hold[i][0] = '\0';
     int counter = 0;
     strcpy(datatype_hold[counter++],token);
-    while (gettoken() == '*' || tokentype == QUALIFIER){
+    while (gettoken() == '*' || tokentype == QUALIFIER){ /*NOTE: this criterion is the whole reason we categorize strings as names, types, or qualifiers. names tell us when we get past the declaration of " pointer to ", qualifier and type. Type might not be necessary, but it is one of the only baked in error checking mechanisms besides matching parenthesis. */
         if (tokentype == QUALIFIER){
             strcat(token, " ");
             strcpy(datatype_hold[counter++],token);

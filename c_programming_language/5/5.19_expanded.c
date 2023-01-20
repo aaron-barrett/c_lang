@@ -2,13 +2,11 @@
 #include <string.h>
 #include <ctype.h>
 
-#define MAXTOKEN 100
+#define MAXTOKEN 1000
 
 enum{NAME, TYPE, QUALIFIER, PARENS, BRACKETS};
 char* qualifiers[] =    {"const", "volatile", "signed", "unsigned", "short", "long"};
 char* datatypes[]  =    {"int", "double", "float", "char", "void"};
-// void dcl(void);
-// void dirdcl(void);
 
 int is_datatype(char s[]);
 int is_qualifer(char s[]);
@@ -17,9 +15,15 @@ int gettoken(void);
 void obtain_output(char* out );
 int tokentype;              /* type of last token */
 char token[MAXTOKEN];       /* last token string */
-// char name[MAXTOKEN];        /* identifer name */
-// char datatype[MAXTOKEN];    /* data type = char, int, etc */
-char out_master[1000];             /* output string */
+char out_master[MAXTOKEN];             /* output string */
+
+/* Fun examples 
+    x () * [] * () char                                                             - > char (*(*x())[])
+    x (int) * [] * () char                                                          - > char (*(*x(int))[])()
+    signal (int, fp * (int) * void) *  (int) void                                   - > void (*signal(int, void* (*fp)(int)))(int)
+    c * (x () * [] * () char, signal (int, fp * (int) * void) *  (int) void ) void  - > void (*c)(char (*(*x())[])(), void (*signal(int, void* (*fp)(int)))(int))
+
+*/
 
 int main()
 {
@@ -55,7 +59,7 @@ void obtain_output(char* out )
             }
             has_star = 1;
         }
-        else if (type == NAME || type == TYPE || type == QUALIFIER)
+        else if (type == NAME || type == TYPE || type == QUALIFIER) /* unlike 5.20, separate qualifers for different strings are unnecessary. I'm keeping these here in case error handling is added later */
         {
             if (has_star)
             {
@@ -79,11 +83,11 @@ void obtain_output(char* out )
                 }
                 else 
                     strcat(temp, local_out);
-                if (tokentype == ')')
+                if (tokentype == ')') /* check for stopping criterion since obtain_output() changes tokentype */
                     break;
             }
             strcat(temp, ")");
-            strcpy(local_out, temp);
+            strcpy(local_out, temp); /* hold in case these arguments are for a function pointer.*/
             if (has_star)
             {
                 sprintf(temp, "(*%s)", out);
@@ -92,10 +96,7 @@ void obtain_output(char* out )
             }
             strcat(out,local_out);
         }
-        else if (type == ')'){
-            return;
-        }
-        else if (type == ',')
+        else if (type == ')' || type == ',') /* this ends function arguments if type = ')', or individual function arguments if type = ','*/
             return;
         else 
             printf("invalid input at %s\n", token);

@@ -130,11 +130,11 @@ void func_args(char* hold)
 {
     char hold_args[MAXTOKEN];
     hold_args[0] = '\0';
+    char hold_type[MAXTOKEN];
+    char hold_name[MAXTOKEN];
+    char hold_argument[MAXTOKEN];
+    char hold_out[MAXTOKEN];
     while (gettoken() != ')'){
-        char hold_type[MAXTOKEN];
-        char hold_name[MAXTOKEN];
-        char hold_argument[MAXTOKEN];
-        char hold_out[MAXTOKEN];
         hold_type[0] = '\0';
         hold_name[0] = '\0';
         hold_argument[0] = '\0';

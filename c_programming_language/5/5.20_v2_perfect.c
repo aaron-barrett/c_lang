@@ -101,6 +101,9 @@ int gettoken(void) /* returns next token */
 }
 
 /* parse function arguments */
+/* 
+    This is the first version that can handle complex declarations as function arguments. This is the penultimate step of of this exercise. The final version merely cleans up this logic, simplifies dirdcl, and calls dirdcl first instead of dcl.
+*/
 void func_args(char* hold)
 {
     int counter = 0;

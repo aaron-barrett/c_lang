@@ -41,8 +41,8 @@ char final_output[MAXTOKEN];             /* output string */
 
 int main()
 {
+    clear_output(); /* clear out input strings just to be safe. NOTE: putting first in the while loop clears out type. */
     while (gettoken() != EOF){
-        clear_output();
         obtain_return_type(datatype_master); /* obtains the type */
         dirdcl(out_master, name_master, argument_master);
         if (tokentype != '\n')
@@ -53,6 +53,7 @@ int main()
         strcat(final_output, datatype_master);
         remove_space(final_output);
         printf("%s\n",final_output);
+        clear_output();
     }
     return 0;
 }
@@ -122,6 +123,9 @@ void obtain_return_type(char* hold)
 }
 
 /* parse function arguments */
+/* 
+    This is a vastly improved version of func_args from the previous version. This streamlines all calls for function arguments, and returns precisely to the hanging '(' in dirdcl which triggers this call. This streamline is why the obtain_return type function exists; it means we only use dcl for function pointers. 
+*/
 void func_args(char* hold)
 {
     char hold_args[MAXTOKEN];

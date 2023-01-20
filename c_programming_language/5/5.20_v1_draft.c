@@ -38,20 +38,6 @@ int is_qualifer(char s[]){
     return -1;
 }
 
-void remove_space(char s[])
-{
-    int k = 0;
-    while (isspace(s[0])){
-        while (s[k] != '\0')
-            s[k++] = s[k+1];
-        k = 0;
-    }
-    for(int i = 0 ; s[i+1] != '\0'; i++ )
-        while (isspace(s[i]) && isspace(s[i+1]))
-            for(k = i ; s[k] != '\0' ; k++)
-                s[k] = s[k+1];
-}
-
 void clear_output()
 {
     tokentype = 0;
@@ -72,12 +58,14 @@ int main()
         dcl();
         if (tokentype != '\n')
             printf("syntax error\t tokentype: %c\n", tokentype);
+        /* thes prettify the output */
         strcat(final_output,name);
         strcat(final_output, ": ");
         strcat(final_output, out);
+        if (out[strlen(out)-1] != ' ')
+            strcat(final_output, " ");
         strcat(final_output, datatype);
-        /* thes prettify the output */
-        remove_space(final_output);
+
         printf("%s\n",final_output);
         clear_output();
     }
@@ -128,6 +116,9 @@ int gettoken(void) /* returns next token */
         return tokentype = c;
 }
 
+/* 
+    This version of func args only assumes that inputs are datatypes, possible with pointers and qualifiers, and simple function pointers, i.e., NOT complex declarations. this was fixed in the final version.
+*/
 void func_args(char* hold)
 {
     int counter = 0;
@@ -139,9 +130,12 @@ void func_args(char* hold)
         strcpy(hold_args[counter++], token);
     while (gettoken() != ')')
         if (tokentype == '*')
-            strcpy(hold_args[counter++], " pointer to ");
-        else if (tokentype == QUALIFIER)
+            strcpy(hold_args[counter++], "pointer to ");
+        else if (tokentype == QUALIFIER){
             strcpy(hold_args[counter], token);
+            strcat(hold_args[counter++], " "); /* just prettifies output */
+
+        }
         else if (tokentype == TYPE)
             strcpy(hold_args[counter++], token);
         else if (tokentype == ','){
@@ -155,7 +149,7 @@ void func_args(char* hold)
             char return_type[100];
             if (gettoken() == '*' && gettoken()  == NAME){
                 strcpy(return_type, hold_args[--counter]);
-                strcpy(hold_args[counter], " pointer to function ");
+                strcpy(hold_args[counter], "pointer to function ");
                 strcat(hold_args[counter], "\""); /* quotes prettify the function name*/
                 strcat(hold_args[counter], token);
                 strcat(hold_args[counter], "\"");
@@ -166,7 +160,7 @@ void func_args(char* hold)
                 }
                 else if (type == PARENS)
                     strcat(hold_args[counter], hold_func);
-                strcat(hold_args[counter], " returning ");
+                strcat(hold_args[counter], " returning");
                 strcat(hold_args[counter++], return_type);
             }
             else 
@@ -184,7 +178,10 @@ void dcl(void)
         ns++;
     dirdcl();
     while(ns-- > 0)
-        strcat(out, " pointer to ");
+        if (strcmp(out, "") == 0) /* this just prettifies the output */
+            strcat(out, "pointer to ");
+        else
+            strcat(out, " pointer to ");
 }
 
 /* dirdcl: parse a direct declarator */
@@ -213,10 +210,10 @@ void dirdcl(void)
     }
     else if (tokentype == ')'){ /* bookends the call which detects function arguements, i.e., this breaks out of detecting function arguments for good.*/
         if (strcmp(argument, "\0") != 0){
-            strcat(out, " function passing ");
+            strcat(out, "function passing ");
             strcat(out, argument);
             argument[0] = '\0';
-            strcat(out, " returning ");
+            strcat(out, " returning");
         }
         return; /* this seems spurious: this is the true bookend, essentially allowing us to resuse the exact functionality without function arguments.*/
     }
@@ -227,11 +224,11 @@ void dirdcl(void)
     if (tokentype != '\n')
         while ((type = gettoken())  == PARENS || type == BRACKETS)
             if (type == PARENS)
-                strcat(out, " function returning ");
+                strcat(out, "function returning");
             else if (type == BRACKETS) {
-                strcat(out, " array");
+                strcat(out, "array");
                 strcat(out, token);
-                strcat(out, " of ");
+                strcat(out, " of");
             }
     if (type == '('){ /* initiall detects function arguments.*/
         gettoken(); /* in this case, we merely needed to call gettoken() again; dcl() can replace gettoken() & dirdcl(), but checking for pointers here is unnecessary with out input assumptions */

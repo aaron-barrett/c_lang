@@ -6,14 +6,14 @@
 
 enum{NAME, PARENS, BRACKETS};
 
-void dcl(void);
-void dirdcl(void);
+// void dcl(void);
+// void dirdcl(void);
 
 int gettoken(void); 
 int tokentype;              /* type of last token */
 char token[MAXTOKEN];       /* last token string */
-char name[MAXTOKEN];        /* identifer name */
-char datatype[MAXTOKEN];    /* data type = char, int, etc */
+// char name[MAXTOKEN];        /* identifer name */
+// char datatype[MAXTOKEN];    /* data type = char, int, etc */
 char out[1000];             /* output string */
 
 int main()

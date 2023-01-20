@@ -30,9 +30,8 @@ int main()
     // char list[] = {'A', 'a', 'B', 'b', '\0'};
     int list_index = 0;
     int pw_index = 0;
-    int out_count = 0;
-    int* count  = &out_count;
-    obtain_pw(save_pw, pw, list,list_index, pw_index,count);
+    int count  = 0;
+    obtain_pw(save_pw, pw, list,list_index, pw_index, &count);
     for(int i = 0 ; i < MAXPW; i++)
         printf("%s\n", save_pw[i]);
     return 0;

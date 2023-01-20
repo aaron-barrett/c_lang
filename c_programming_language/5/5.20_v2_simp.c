@@ -51,6 +51,7 @@ int main()
         strcat(final_output, ": ");
         strcat(final_output, out_master);
         strcat(final_output, datatype_master);
+        strcat(final_output, ".");
         remove_space(final_output);
         printf("%s\n",final_output);
         clear_output();
@@ -102,6 +103,7 @@ int gettoken(void) /* returns next token */
         return tokentype = c;
 }
 
+/* function that obtains the return type, complete with keywords and pointers */
 void obtain_return_type(char* hold)
 {
     char datatype_hold[MAXARG][MAXTOKEN];
@@ -230,20 +232,23 @@ void ungetch(int c) /* push character back to input */
         buf[bufp++] = c;
 }
 
-int is_datatype(char s[]){
+/* checks if a string is a defined datatype */
+int is_datatype(char s[]){ 
     for(int i = 0 ; i < sizeof(datatypes) / sizeof(datatypes[0]); i++)
         if (strcmp(s, datatypes[i]) == 0)
             return i;
     return -1;
 }
 
-int is_qualifer(char s[]){
+/* checks if a string is a defined qualifier */
+int is_qualifer(char s[]){ 
     for(int i = 0 ; i < sizeof(qualifiers) / sizeof(qualifiers[0]); i++)
         if (strcmp(s, qualifiers[i]) == 0)
             return i;
     return -1;
 }
 
+/* removes spaces from a string, here the final output */
 void remove_space(char s[])
 {
     int k = 0;
@@ -258,6 +263,7 @@ void remove_space(char s[])
                 s[k] = s[k+1];
 }
 
+/* resets variables for the next input */
 void clear_output()
 {
     tokentype = 0;

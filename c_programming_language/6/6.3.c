@@ -17,6 +17,16 @@ struct tnode{
     struct tnode* right;
 };
 
+char* noise_words[] = {"a", "an", "and", "but", "for", "I", "nor", "or", "so", "the", "yet", "you", "we"};
+int is_noise_word(char* word)
+{
+    for(int i = 0 ; i < sizeof(noise_words) / sizeof(noise_words[0]); i++)
+        if (strcmp(word, noise_words[i]) == 0)
+            return i;
+    return -1;
+}
+
+
 struct tnode* addtree(struct tnode*, char*);
 void treeprint(struct tnode*);
 int getword(char*, int);
@@ -28,7 +38,7 @@ int main(int argc, char* argv[])
     char word[MAXWORD];
     root = NULL;
     while (getword(word, MAXWORD) != EOF)
-        if (isalpha(word[0]))
+        if (isalpha(word[0]) && is_noise_word(word) == -1)
             root = addtree(root,word);
     treeprint(root);
     return 0;
@@ -95,7 +105,7 @@ int getword(char* word, int lim)
     int c, getch(void);
     void ungetch(int);
     char* w = word;
-    while (isspace(c = getch())){/* since this gets rid of white space, a new line will be stored in getch() for this call */
+    while (isspace(c = getch()))/* since this gets rid of white space, a new line will be stored in getch() for this call */
         if (c == '\n')
             line_number++;
     if (c == '\"'){ /* ignores strings */

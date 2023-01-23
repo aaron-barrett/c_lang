@@ -77,8 +77,7 @@ void obtain_output(char* out )
             }
             has_star = 1;
         }
-        else if (type == NAME || type == TYPE || type == QUALIFIER) /* unlike 5.20, separate qualifers for different strings are unnecessary. I'm keeping these here in case error handling is added later */
-        {
+        else if (type == NAME || type == TYPE || type == QUALIFIER){ /* unlike 5.20, separate qualifers for different strings are unnecessary. I'm keeping these here in case error handling is added later */
             if (has_star)
             {
                 sprintf(temp, "*%s", out);
@@ -125,7 +124,6 @@ void obtain_output(char* out )
 int gettoken(void)
 {
     getword(token,MAXTOKEN);
-    int c;
     if (is_datatype(token) != -1)
         return tokentype = TYPE;
     else if (is_qualifer(token) != -1)

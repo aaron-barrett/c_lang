@@ -25,16 +25,23 @@ char token[MAXTOKEN];       /* last token string */
 char out_master[MAXTOKEN];             /* output string */
 
 /* Fun examples 
-    x () * [] * () char                                                             - > char (*(*x())[])
-    x (int) * [] * () char                                                          - > char (*(*x(int))[])()
-    signal (int, fp * (int) * void) *  (int) void                                   - > void (*signal(int, void* (*fp)(int)))(int)
-    c * (x () * [] * () char, signal (int, fp * (int) * void) *  (int) void ) void  - > void (*c)(char (*(*x())[])(), void (*signal(int, void* (*fp)(int)))(int))
+
+    x: function passing nothing returning pointer to array[] of pointer to char.                                                             
+        - > char (*(*x())[])
+
+    x: function passing int returning pointer to array[] of pointer to function passing nothing returning char.                                                         
+        - > char (*(*x(int))[])()
+
+    signal: function passing int and "fp", pointer to function passing int returning pointer to void, returning pointer to function passing int returning void.
+         - > void (*signal(int, void* (*fp)(int)))(int)
+
+    c: pointer to function passing "x", function passing nothing returning pointer to array[] of pointer to function passing nothing returning char, and "signal", function passing int and "fp", pointer to function passing int returning pointer to void, returning pointer to function passing int returning void, returning void.
+         - > void (*c)(char (*(*x())[])(), void (*signal(int, void* (*fp)(int)))(int))
 
     complex: pointer to function passing "com", pointer to function passing "x", function passing nothing returning pointer to array[] of pointer to function passing nothing returning char, returning void, and "signal", function passing int and "fp", pointer to function passing int returning pointer to void, returning pointer to function passing int returning void, returning void. 
-    -> void (*complex)(void (*com)(char (*(*x())[])()), void (*signal(int, void *(*fp)(int)))(int))
+        -> void (*complex)(void (*com)(char (*(*x())[])()), void (*signal(int, void *(*fp)(int)))(int))
 
 */
-
 
 int main()
 {
@@ -113,7 +120,9 @@ void obtain_output(char* out )
             printf("invalid input at %s\n", token);
 }
 
-int gettoken(void) /* returns next token */
+/* gettoken: returns next token */
+/* This is unlike previous gettoken functions. This one acts as an interpreter for getword and responds LIKE gettoken.*/
+int gettoken(void)
 {
     getword(token,MAXTOKEN);
     int c;
@@ -121,8 +130,7 @@ int gettoken(void) /* returns next token */
         return tokentype = TYPE;
     else if (is_qualifer(token) != -1)
         return tokentype = QUALIFIER;
-    else if (strcmp("function", token) == 0 )
-    {
+    else if (strcmp("function", token) == 0 ){
         getword(token, MAXTOKEN);
         if (strcmp(token, "passing") == 0)
             getword(token, MAXTOKEN);
@@ -135,37 +143,26 @@ int gettoken(void) /* returns next token */
             return tokentype = PARENS;
         }
         else{ /* handles all argument types without any checks */
-            for(int i = strlen(token) - 1 ; i >= 0; i--)
+            for(int i = strlen(token) - 1 ; i >= 0; i--) /* store this for latter a function argument may be a complex declaration. */
                 ungetch(token[i]);
-            strcpy(token,"(");
             return tokentype = '(';
         }
     }
     else if (strcmp(token, "pointer") == 0){
         getword(token,MAXTOKEN);
-        if (strcmp(token, "to") == 0){
-            strcpy(token, "*");
+        if (strcmp(token, "to") == 0)
             return '*';
-        }
-        else {
-            printf("ERROR: expected \"to\" to follow \"pointer\"\n");
-            return -1;
-        }
+        printf("ERROR: expected \"to\" to follow \"pointer\"\n");
+        return -1;
     }
-    else if (strcmp(token, "returning") == 0)
-    {
-        if (tokentype == TYPE){
-            strcpy(token, ")"); /* might not matter */
+    else if (strcmp(token, "returning") == 0){
+        if (tokentype == TYPE)
             return tokentype = ')';
-        }
-        else {
+        else
             gettoken(); /* call recursion whenever a complex declaration can be found, for this exercise this should only be return type and arrays  */
-        }
     }
-    else if (strcmp(token, "and") == 0 ){
-        strcpy(token,","); /* might not matter */
+    else if (strcmp(token, "and") == 0 )
         return tokentype  = ',';
-    }
     else if (strstr(token, "array[") != NULL){
         char* ptr = strstr(token, "[");
         int i = 0 ; 
@@ -174,12 +171,12 @@ int gettoken(void) /* returns next token */
         token[i] = '\0';
         return BRACKETS;
     }
-    else if (strcmp(token,"of") == 0){ /* only called after array of, maybe move this above, but this complicates logic */
+    else if (strcmp(token,"of") == 0){ /* only called after array[], could move this, yes, but this complicates logic */
         gettoken(); /* call recursion whenever a complex declaration can be found */
     }
     else if (strcmp(token, "\n") == 0)
         return tokentype = '\n';
-    else{
+    else{ /* NAME tokentype is the least safe option since it merely isn't anything else when parsing individual words. */
         if (token[strlen(token)-1] == ':')
             token[strlen(token)-1] = '\0';
         else if (token[strlen(token)-1] == '\"'){

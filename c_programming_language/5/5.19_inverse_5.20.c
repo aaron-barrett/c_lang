@@ -70,16 +70,14 @@ void obtain_output(char* out )
             strcat(out, token);
         }
         else if (type == '*'){
-            if (has_star) /* this sets has_star in order to check for spurious parenthesis; they are only added if the following command is a bracket or parenthesis. */
-            {
+            if (has_star){ /* this sets has_star in order to check for spurious parenthesis; they are only added if the following command is a bracket or parenthesis. */
                 sprintf(temp, "*%s", out);
                 strcpy(out, temp);
             }
             has_star = 1;
         }
         else if (type == NAME || type == TYPE || type == QUALIFIER){ /* unlike 5.20, separate qualifers for different strings are unnecessary. I'm keeping these here in case error handling is added later */
-            if (has_star)
-            {
+            if (has_star){
                 sprintf(temp, "*%s", out);
                 strcpy(out, temp);
                 has_star = 0;
@@ -105,8 +103,7 @@ void obtain_output(char* out )
             }
             strcat(temp, ")");
             strcpy(local_out, temp); /* hold in case these arguments are for a function pointer.*/
-            if (has_star)
-            {
+            if (has_star){
                 sprintf(temp, "(*%s)", out);
                 strcpy(out, temp);
                 has_star = 0;

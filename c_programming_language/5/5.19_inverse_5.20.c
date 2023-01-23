@@ -1,3 +1,7 @@
+/*
+    This is 5.19_func_args which takes the full output of 5.20 and returns the symbolic declaration. 
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

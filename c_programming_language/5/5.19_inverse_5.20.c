@@ -4,7 +4,7 @@
 *   5.19: Modify undecl so that it does not add redundant parenthesis to declarations. 
 *   
 *   Notes: This is 5.19_func_args which takes the full output of 5.20 and returns the symbolic declaration. This is the second crown jewel
-*   of this solution set.
+*   of this solution set along with 5.20.
 *********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>

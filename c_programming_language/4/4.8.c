@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   4.8: Suppose that there will never be more than one chracter of pushback. Modify getch and ungetch accordingly.
+*   
+*   Notes:  Having looked this up, I agree with one commenter. "There's too many ways to do this. Just set BUFSIZE to 1".
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 

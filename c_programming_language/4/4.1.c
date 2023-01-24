@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   4.1: Write the function strrinddex(s,t), which returns the position of the rightmost ocurrence of t in s, or -1 if there is none.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #define MAXLINE 1000 

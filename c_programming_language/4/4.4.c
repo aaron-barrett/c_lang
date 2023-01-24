@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   4.4: Add commands to print the top element of the stack wihtout popping, to duplicate it, and to swap the top two elements. Add a command 
+*   to clear the stack.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <stdlib.h> /* for atof() */
 #include <float.h>

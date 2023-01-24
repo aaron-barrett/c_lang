@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   4.7: Write a routine ungets(s) that will push back an entire string onto the input. Should ungets know about buf and bufp, or should it 
+*   just use ungetch?
+*   
+*   Notes: It needs to know about bufp in order to avoid overflow, probably.
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 

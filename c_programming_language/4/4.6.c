@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   4.6: Add commands for handling variables. (It's easy to provide twenty-six variables with single letter names.) Add a variable for the
+*   most recently printed value.
+*   
+*   Notes: This is more or less the "final" version of the Polish calcultor.
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <stdlib.h> /* for atof() */
 #include <math.h>

@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   4.14: Define a maco swap(t,x,y) that interchanges two arguments of type t. (Block structure will help.)
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 
 #define swap(t,x,y) do{t c = x ; x = y; y = c;} while(0) /* This is a trick to reuse the macro once one instance is called.*/

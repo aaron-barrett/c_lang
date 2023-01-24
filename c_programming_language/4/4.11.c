@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   4.11: Modify getop so that it doesn't need to use ungetch. Hint: Use an internal static variable.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <stdlib.h> /* for atof() */
 #include <math.h>

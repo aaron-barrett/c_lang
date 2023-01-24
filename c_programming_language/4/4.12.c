@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   4.12: Adapt the ideas of printd to write a recursive version of itoa; this is, convert an integer into a string by calling a recursive
+*   routine.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>

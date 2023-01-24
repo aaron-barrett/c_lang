@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   6.1: Our versino of getword does not properly handle underscores, string constants, comments or preprocessor control lines. Write a better
+*   version.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -137,5 +145,3 @@ void ungetch(int c) /* push character back to input */
     else 
         buf[bufp++] = c;
 }
-
-

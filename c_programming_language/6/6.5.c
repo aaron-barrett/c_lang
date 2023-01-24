@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   6.5: Write a function undef that will remove a name and definition from the table maintained by lookup and install.
+*   
+*   Notes: This builds heavily from code in the text which is left uncommented. 
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   7.1: Write a prompt that converts upper case to lower or lower case to upper, depending on the name it is invoked with, as found in argv[0].
+*   
+*   Notes: Likely due to windows or modern compilers, I used input from argv[1] instead of argv[0].
+*********************************************************************************************************************************************/
 #include<stdio.h>
 #include<string.h>
 #include<ctype.h>

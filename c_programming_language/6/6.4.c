@@ -1,3 +1,12 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   6.4: Write a program that prints distinct words in its input sorted into decreasing order of frequency of occurence. Precede each word by
+*   its word count.
+*   
+*   Notes: Unlike 6.2 and 6.3, this implementation disregards a binary tree as the container. This is to employ a quick sort on the frequency,
+*   stored as "count", in tnode.
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>

@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   2.8: Write a function rightrot(x,n) that returns the value of the integer x rotated to the right by n positions.
+*   
+*   Notes: Also included leftrot(x,n), the inverse, for the sake of completion.
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <limits.h>
 #include <string.h>

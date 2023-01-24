@@ -1,3 +1,12 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   2.1: Write a program to determine the ranges of char, short, int, and long variables, both signed and unsigned, by printing appropriate
+*   values fromn standard headers and by direct computation. Harder if you compute them: determine the ranges of the various floating-point
+*   types.
+*   
+*   Notes: TODO: Compute these directly to finish the exercise. Use the size of each type and use binary operations?
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <limits.h>
 #include <float.h>
@@ -27,6 +36,5 @@ int main()
     printf("double min: %f \t double max: %f\n", double_min, double_max);
     printf("long double min: %f \t long double max: %f\n", long_double_min, long_double_max);
 
-    // TODO: Compute these directly to finish the exercise. Use the size of each type and use binary operations?
     return 0;
 }

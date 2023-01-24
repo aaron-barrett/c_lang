@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   2.10: Rewrite the function lower, whicih converts upper case letters to lower case, with a conditional expression instead of if-else.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 
 int lower (int c)

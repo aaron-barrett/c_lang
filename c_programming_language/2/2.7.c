@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   2.7: Write a function invert(x,p,n) that returns x with the n bits that begin at position p inverted(i.e., 1 changed into 0 and vice
+*   versa), leaving the others unchanged.
+*   
+*   Notes: A better version of this is in bit_operations.
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <limits.h>
 #include <string.h>

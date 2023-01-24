@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.18: Make dcl recover from input errors.
+*   
+*   Notes: This mainly includes excluding spaces between parenthesis, and a contrived skipping of additional chracters in NAME fields that
+*   was not used in any version of 5.20.
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

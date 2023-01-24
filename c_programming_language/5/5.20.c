@@ -1,3 +1,13 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.20: Expand dcl to handle declarations with function arguments types, qualifiers like const, and so on.
+*   
+*   Notes: This is a general solution which is a crown jewel of this solution set along with 5.19_inverse_5.20. This assumes that qualifers 
+*   always come after the types they qualify, and this does not inlude functionality for structs, which are the subject of Chapter 6. Note 
+*   there are no robust error checks. For example, array[X] can be erroneously be given as a return type. Such checks should be the subject 
+*   of post processing on the output string.
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

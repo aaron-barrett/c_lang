@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.4: Write a function strend(s,t), which returns 1 if the string t occurs at the end of string s, and zero otherwise.
+*   
+*   Notes: 
+*********************************************************************************************************************************************/
 #include <stdio.h>
 
 int strend(char* s, char* t)

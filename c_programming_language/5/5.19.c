@@ -1,7 +1,11 @@
-/* 
-    This is plain solution for 5.19 that doesn't include function arguments.
-*/
-
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.19: Modify undecl so that it does not add redundant parenthesis to declarations. 
+*   
+*   Notes: This is the basic solution to the above prompt, meaning that this does not include function arguments. 5.19_func_args remedies
+*   this, and 5.19_inverse_5.20 is a fancy version of 5.19_func_args which takes the output of 5.20 as input, hence "inverse_5.20".
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.15: Add the option -f to fold the upper and lower case together, so that case distinctions are not made during sorting: for example, and
+*   A compare equal.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -96,15 +104,6 @@ int numcmp(char* s1, char* s2)
     else 
         return 0;
 }
-
-/* performs a comparison if fold option is chosen by comparing lower cases of relevant characters */
-// int compare_if_fold(char s, char t)
-// {
-//     if ( ((s <= 'z' && s >= 'a') || (s <= 'Z' && s >= 'A')) &&
-//      ((t <= 'z' && t >= 'a') || (t <= 'Z' && t >= 'A')) )
-//      return (tolower(s) == tolower(t));
-    
-// }
 
 /* strcmp_: return <0 if s<t, 0 if s==t, >0 if s>t */
 int strcmp_(char* s, char* t)

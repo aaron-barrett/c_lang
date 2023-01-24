@@ -1,3 +1,19 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.17: Add a field-handling capability, so sorting may be done on fields within lines, each field sorted according to an independent set of 
+*   options. (The index for this book was sorted with -df for the index category and -n for the page numbers.)
+*   
+*   Notes: This was more work than it looks despite how straightforward it is to design. First, the default pivot for the quick sort is the 
+*   middle element, which is unsuited to working with subfields in this way. Second, I assume that consecutive fields must not change the
+*   ordering of previous fields, otherwise this program isn't very good. The easy example is sorting chapters first then sections. Third, 
+*   like all programs before, each individual flag is delineated by '-', so putting two flags together is "-d -r" for example. Fourth and 
+*   finally, some tests are contained in the file 5.17_test_cases for each copy-paste.
+* 
+*   Assumptions: This implementation assumes that fields are in the same order accross the board: if a string contains multiple fields, they 
+*   are in the same order for all input strings; the input fields in the command line are also in the same order as expected to find in the 
+*   input string, etc.
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -219,8 +235,8 @@ int numcmp(char* s1, char* s2, int fold, int directory)
     printf("s2 = %s\n", s2);
     v1 = atof(s1);
     v2 = atof(s2);
-    printf("v1 = %f\n", v1);
-    printf("v2 = %f\n", v2);
+    // printf("v1 = %f\n", v1);
+    // printf("v2 = %f\n", v2);
     if (v1 < v2)
         return -1;
     else if (v1 > v2)

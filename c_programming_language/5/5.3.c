@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.3: Write a pointer verion of the function strcat that we showed in Chapter 2: strcat(s,t) copies string t to the end of string s.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 
 #define ALLOCSIZE 10             /* size of available space */

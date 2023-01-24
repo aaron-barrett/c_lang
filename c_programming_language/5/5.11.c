@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.11: Modify the programs entab and detab (written as exercises in Chapter 1) to accpet a list of tab stops as argument. Use the default 
+*   tab settings if there are no arguments.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 

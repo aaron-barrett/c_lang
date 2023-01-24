@@ -1,7 +1,11 @@
-/*
-    This is 5.19_func_args which takes the full output of 5.20 and returns the symbolic declaration. 
-*/
-
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.19: Modify undecl so that it does not add redundant parenthesis to declarations. 
+*   
+*   Notes: This is 5.19_func_args which takes the full output of 5.20 and returns the symbolic declaration. This is the second crown jewel
+*   of this solution set.
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

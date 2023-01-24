@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.16: Add the -d ("directory order") option, which makes comparisons only on letters, numbers, and blanks. Make sure it works in
+*   conjunction with -f.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -116,10 +124,6 @@ int strcmp_(char* s, char* t)
     if (directory == 1){
         directory_filter(ss);
         directory_filter(tt);
-        // printf("s = %s\n",ss);
-        // printf("ss = %s\n",ss);
-        // printf("t = %s\n",tt);
-        // printf("tt = %s\n",tt);
     }
     if (fold == 1){
         for(i = 0; (tolower(ss[i]) == tolower(tt[i])) ; i++)

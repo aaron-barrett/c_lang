@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.1: As written, getint treats a + or a - not followed by a digit as a valid representation of zero. Fix it to push such a character back
+*   on the input.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <ctype.h>
 #include <stdio.h>
 

@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.2: Write getfloat, the floating-point analog of getint. What types does getfloat return as its function value?
+*   
+*   Notes: Still returns int. No need to change it.
+*********************************************************************************************************************************************/
 #include <ctype.h>
 #include <stdio.h>
 

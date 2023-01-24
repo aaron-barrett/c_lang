@@ -1,7 +1,11 @@
-/*
-    This is the expanded version of 5.19 that takes in function arguments, including complex declarations as function arguments.
-*/
-
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   5.19: Modify undecl so that it does not add redundant parenthesis to declarations. 
+*   
+*   Notes: This is the expanded version of 5.19 that takes in function arguments, including complex declarations as function arguments. The 
+*   user input is still symbolic, just as 5.19.
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   1.18: Write a pgoram to remove trailing blanks and tabs for each line of input, and to delte entirely blanks lines.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #define MAXLINE 1000
 #define MINLINE 80

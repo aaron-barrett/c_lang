@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   1.15: Rewrite the temperature conversion program of section 1.2 to use a function for conversion.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 
 float f_to_c(float fahr){

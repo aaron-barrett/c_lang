@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   1.13: Write a program to print a histogram of the heights of words in its input. It is easy to draw the histogram with the bars
+*   horizontal; a vertical orientation is more challenging.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 
 int main()

@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   1.23: Write a progrma to remove all comments from a c program. Don't forget to handled quoted strings and character constants properly.
+*   C comments do not nest.
+*   
+*   Notes: 
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #define MAXLINE 1000
 
@@ -48,4 +56,3 @@ int remove_comments(char s[], int lim)
     return i;
 }
 
-//ass

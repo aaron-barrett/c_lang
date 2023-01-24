@@ -1,3 +1,12 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   1.24: Write a program to check a C program for rudimentary syntax errors like unbalanced parentheses, brackets, and braces. Dont' forget 
+*   about quotes, both single and double, escape sequences, and comments. (This program is hard if you do it in full generality.)
+*   
+*   Notes: Honestly have no idea how to check escape sequences. It might mean to check output after a '\', but I didn't do that. 
+*   A very simple test is contained in 1.24_tests
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #define MAXLINE 1000
 

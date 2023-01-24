@@ -1,3 +1,11 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   1.21: Write a program entab that replaces strings of blanks by the minimum number of tabs and blanks to achieve the same placing. 
+*   Use the same tab stops as detab. When either a tab or a single blank would suffice to reach a tab stop, which should be given preference.
+*   
+*   Notes: Going by memory, I think a single blank was preferable. 
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #define MAXLINE 1000
 #define TABSTOP 8

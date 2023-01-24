@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   1.2: Experiment to find out what happens when printf's argument string contain \c, where c is some character not listed above. 
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 
 int main()

@@ -1,3 +1,10 @@
+/*********************************************************************************************************************************************
+*   C Programming Language, Kernighan & Ritchie 
+*   
+*   1.19: Write a program reverse(s) that reverses the character string s. Use it to write a program that reverses its input a line at a time.
+*   
+*   Notes:
+*********************************************************************************************************************************************/
 #include <stdio.h>
 #define MAXLINE 1000
 #define MINLINE 80

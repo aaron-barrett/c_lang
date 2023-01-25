@@ -1,5 +1,5 @@
 # c_lang
-Let's learn some straight C programming!
+Let's learn some C programming!
 
 There are currently two main folders: One containing a solution set to the C Programming Language and one containing Misc Exercises.
 The C Programming Language Folder contains a complete set of solutions to the first 6 chapters of K&R. 

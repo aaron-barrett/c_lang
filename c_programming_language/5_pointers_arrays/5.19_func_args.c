@@ -13,6 +13,8 @@
 #define MAXTOKEN 1000
 
 enum{NAME, TYPE, QUALIFIER, PARENS, BRACKETS};
+
+/* We ignore storage class specifiers for the time being. We could simply add them to modifier list as is, but that might not be as clear. */
 char* qualifiers[] =    {"const", "volatile", "signed", "unsigned", "short", "long"};
 char* datatypes[]  =    {"int", "double", "float", "char", "void"};
 

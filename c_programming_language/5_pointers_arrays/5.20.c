@@ -17,7 +17,8 @@
 
 enum{NAME, TYPE, QUALIFIER, PARENS, BRACKETS};
 
-/* Might want to add functionality to expand these. right now structs can't be used, and this assumes that all qualifiers appear after a datatype, and that shorthand where a qualifier alone is used for a type is error prone if not unusable */
+/* Might want to add functionality to expand these. Right now structs can't be used. We assume that all qualifiers appear after a datatype, and shorthand where a qualifier alone is unusable */
+/* We ignore storage class specifiers for the time being. We could simply add them to modifier list as is, but that might not be as clear. */
 char* qualifiers[] =    {"const", "volatile", "signed", "unsigned", "short", "long"};
 char* datatypes[]  =    {"int", "double", "float", "char", "void"};
 
@@ -32,18 +33,19 @@ void func_args(char* hold);
 void obtain_return_type(char* hold);
 int gettoken(void); 
 
-int tokentype;              /* type of last token */
-char token[MAXTOKEN];       /* last token string */
-char name_master[MAXTOKEN];        /* identifer name */
-char datatype_master[MAXTOKEN];    /* data type = char, int, etc */
-char out_master[MAXTOKEN];             /* output string */
-char argument_master[MAXTOKEN];             /* output string */
-char final_output[MAXTOKEN];             /* output string */
+int tokentype;                      /* type of last token */
+char token[MAXTOKEN];               /* last token string */
+char name_master[MAXTOKEN];         /* identifer name */
+char datatype_master[MAXTOKEN];     /* data type = char, int, etc */
+char out_master[MAXTOKEN];          /* output that isn't name or type  string */
+char argument_master[MAXTOKEN];     /* function argument string - used as storage  */
+char final_output[MAXTOKEN];        /* final output string */
 
 /*  Fun test examples
     int (*x)(int*const,void*(*y)(int))
     char (*(*x())[])()
     void (**de[])(int,int)
+    void (* const de)(int,int)
     void (*signal(int, void* (*fp)(int)))(int)
     void (*c)(char (*(*x())[])(), void (*signal(int, void* (*fp)(int)))(int))
     void (*complex)(void (*com)(char (*(*x())[])()), void (*signal(int, void* (*fp)(int)))(int))
@@ -176,14 +178,22 @@ void func_args(char* hold)
 }
 
 /* dcl: parse a declarator; NOTE: this now only handles pointers to functions */
+/* Lastest Update: this also handles qualifers to function pointers. */
+/* At this point, having separate dcl and dirdcl calls is probably meaningless enouhgh to combine them, but that's trickier than its worth.  */
 void dcl(char* out, char* name, char* argument)
 {
-    int ns;
-    for(ns = 0; gettoken() == '*'; ) /* count *'s */
-        ns++;
+    int ns, type;
+    char hold[MAXARG][MAXTOKEN];
+    for(ns = 0 ; ns < MAXARG; ns++)
+        hold[ns][0] = '\0';
+    for(ns = 0; (type = gettoken()) == '*' || type == QUALIFIER; ) /* count *'s  and qualifiers for *'s */
+        if (type == '*')
+            strcat(hold[ns++], " pointer to ");
+        else 
+            strcat(hold[ns++], token);
     dirdcl(out,name,argument);
     while(ns-- > 0)
-        strcat(out, " pointer to ");
+        strcat(out, hold[ns]);
 }
 
 /* dirdcl: parse a direct declarator */

@@ -24,12 +24,11 @@ int getword(char*, int);
 int getch(void);
 void ungetch(int);
 void obtain_output(char* out );
-int tokentype;              /* type of last token */
-char token[MAXTOKEN];       /* last token string */
-char out_master[MAXTOKEN];             /* output string */
+int tokentype;                  /* type of last token */
+char token[MAXTOKEN];           /* last token string */
+char out_master[MAXTOKEN];      /* output string */
 
 /* Fun examples 
-
     x: function passing nothing returning pointer to array[] of pointer to char.                                                             
         - > char (*(*x())[])
 
@@ -43,8 +42,7 @@ char out_master[MAXTOKEN];             /* output string */
          - > void (*c)(char (*(*x())[])(), void (*signal(int, void* (*fp)(int)))(int))
 
     complex: pointer to function passing "com", pointer to function passing "x", function passing nothing returning pointer to array[] of pointer to function passing nothing returning char, returning void, and "signal", function passing int and "fp", pointer to function passing int returning pointer to void, returning pointer to function passing int returning void, returning void. 
-        -> void (*complex)(void (*com)(char (*(*x())[])()), void (*signal(int, void *(*fp)(int)))(int))
-
+        - > void (*complex)(void (*com)(char (*(*x())[])()), void (*signal(int, void *(*fp)(int)))(int))
 */
 
 int main()

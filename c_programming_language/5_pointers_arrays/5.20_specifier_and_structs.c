@@ -1,10 +1,10 @@
 /*********************************************************************************************************************************************
 *   C Programming Language, Kernighan & Ritchie 
 *   
-*   5.20 Expanded: Expand dcl to handle declarations with function arguments types, qualifiers like const, and so on. Inlude modifiers and 
+*   5.20 Expanded: Expand dcl to handle declarations with function arguments types, qualifiers like const, and so on. Inlude specifiers and 
 *   structs.
 *   
-*   Notes: This has the same constraints as 5.20, only now a modifers are allowed to prefix the declaration and structs are valid types.
+*   Notes: This has the same constraints as 5.20, only now a specifiers are allowed to prefix the declaration and structs are valid types.
 *********************************************************************************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -18,11 +18,11 @@ enum{NAME, TYPE, QUALIFIER, MODIFIER, PARENS, BRACKETS};
 /* Might want to add functionality to expand these. Right now structs can't be used. We assume that all qualifiers appear after a datatype, and shorthand where a qualifier alone is unusable */
 char* qualifiers[] =    {"const", "volatile", "signed", "unsigned", "short", "long"};
 char* datatypes[]  =    {"int", "double", "float", "char", "void"};
-char* modifiers[]  =    {"auto", "extern", "register", "static"};
+char* specifiers[]  =    {"auto", "extern", "register", "static"};
 
 int is_datatype(char s[]);
 int is_qualifer(char s[]);
-int is_modifier(char s[]);
+int is_specifier(char s[]);
 void remove_space(char s[]);
 void clear_output();
 
@@ -112,7 +112,7 @@ int gettoken(void) /* returns next token */
             return tokentype = TYPE;
         else if (is_qualifer(token) != -1)
             return tokentype = QUALIFIER;
-        else if (is_modifier(token) != -1)
+        else if (is_specifier(token) != -1)
             return tokentype = MODIFIER;
         else if (strcmp(token, "struct") == 0){
             gettoken();
@@ -288,9 +288,9 @@ int is_qualifer(char s[]){
 }
 
 /* checks if a string is a defined modifier */
-int is_modifier(char s[]){ 
-    for(int i = 0 ; i < sizeof(modifiers) / sizeof(modifiers[0]); i++)
-        if (strcmp(s, modifiers[i]) == 0)
+int is_specifier(char s[]){ 
+    for(int i = 0 ; i < sizeof(specifiers) / sizeof(specifiers[0]); i++)
+        if (strcmp(s, specifiers[i]) == 0)
             return i;
     return -1;
 }

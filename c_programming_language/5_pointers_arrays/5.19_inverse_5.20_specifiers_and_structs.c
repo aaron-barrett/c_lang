@@ -4,7 +4,7 @@
 *   5.19 Expanded: Modify undecl so that it does not add redundant parenthesis to declarations including functionaltiy for structs and 
 *   modifers.
 *   
-*   Notes: This is the inverse of 5.20_modifiers_and_structs and returns the symbolic declaration. This has the same limitations as 
+*   Notes: This is the inverse of 5.20_specifiers_and_structs and returns the symbolic declaration. This has the same limitations as 
 *   5.19_inverse_5.20 for everything else.
 *********************************************************************************************************************************************/
 #include <stdio.h>
@@ -17,11 +17,11 @@ enum{NAME, TYPE, QUALIFIER, MODIFIER, PARENS, BRACKETS};
 
 char* qualifiers[] =    {"const", "volatile", "signed", "unsigned", "short", "long"};
 char* datatypes[]  =    {"int", "double", "float", "char", "void"};
-char* modifiers[]  =    {"auto", "extern", "register", "static"};
+char* specifiers[]  =    {"auto", "extern", "register", "static"};
 
 int is_datatype(char s[]);
 int is_qualifer(char s[]);
-int is_modifier(char s[]);
+int is_specifier(char s[]);
 void clear_output(void);
 int gettoken(void); 
 int getword(char*, int);
@@ -191,7 +191,7 @@ int gettoken(void)
         gettoken();
         if (strcmp(token, "as") == 0){
             gettoken();
-            if (is_modifier(token) != -1)
+            if (is_specifier(token) != -1)
                 return MODIFIER;
             else
                 printf("Error: expected modifier\n");
@@ -281,9 +281,9 @@ int is_qualifer(char s[]){
 }
 
 /* checks if a string is a defined modifier */
-int is_modifier(char s[]){ 
-    for(int i = 0 ; i < sizeof(modifiers) / sizeof(modifiers[0]); i++)
-        if (strcmp(s, modifiers[i]) == 0)
+int is_specifier(char s[]){ 
+    for(int i = 0 ; i < sizeof(specifiers) / sizeof(specifiers[0]); i++)
+        if (strcmp(s, specifiers[i]) == 0)
             return i;
     return -1;
 }

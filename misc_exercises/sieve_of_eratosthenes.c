@@ -41,5 +41,11 @@ int main()
         printf("%d ", sieve[i]);
     printf("\n");
     free(sieve);
+    sieve = (int*) calloc(n , sizeof(int)); /* also calloc initializes zeros automatically */
+    printf("(A reminder that we passed a pointer to a pointer to \"create_sieve\" in order to avoid passing by reference. we can adjust sieve directly here.)\n");
+    for(int i = 0 ; i < n ; i++)
+        printf("%d ", sieve[i]);
+    printf("\n");
+    free(sieve);
     return 0;
 }

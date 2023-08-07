@@ -32,7 +32,7 @@ void print_list(node* head){
 void free_node(node* head){
     node* temp;
     while(head != NULL){
-        // printf("delete node ->data: %d\n", head->data);
+        printf("delete node ->data: %d\n", head->data);
         temp = head->neighbor;
         free(head);
         head = temp;
@@ -48,46 +48,45 @@ unsigned count_node(node* head){
     return count;
 }
 
-void swap(node**head, unsigned i){
-    node* temp1 = *head;
-    node* temp2 = (*head)->neighbor;
-    if (i == 0){
-        node* hold = temp2->neighbor;
-        temp2->neighbor = temp1;
-        temp1->neighbor = hold;
-        *head = temp2;
-    }
-    else {
-        node* hold = temp2->neighbor->neighbor;
-        temp1->neighbor = temp2->neighbor;
-        temp1->neighbor->neighbor = temp2;
-        temp1->neighbor->neighbor->neighbor = hold;
-    }
-}
-
-void bubble_sort(node** head){
-    unsigned size = count_node(*head);
+node* bubble_sort(node* head){
+    unsigned size = count_node(head);
+    unsigned stop = 1 ; 
     node* prev;
     node* hold;
-    node* temp = *head;
-    for (unsigned i = 0 ; i < size - 2 ; i++){
-        prev = temp;
-        hold = temp->neighbor;
-        for(unsigned j = i ; j < size - 2 ; j++){
+    for (unsigned i = 0 ; i < size - 1 ; i++){
+        prev = head;
+        hold = head->neighbor;
+        stop = 1;
+        for(unsigned j = 0 ; j < size - 1 - i  ; j++){
             if (j == 0){
-                printf("here\n");
-                if (prev->data >= prev->neighbor->data)
-                    swap(&prev,j);
-                // break;
+                if (prev->data >= hold->data){
+                    prev->neighbor = hold->neighbor;
+                    hold->neighbor = prev;
+                    prev = hold;
+                    hold = hold->neighbor;
+                    head = prev;
+                    stop = 0;
+                }
             }
-            else if (hold->data >= hold->neighbor->data)
-                swap(&hold,j);
-            prev = prev->neighbor;
-            hold = hold->neighbor;
+            else{
+                if (hold->data >= hold->neighbor->data){
+                    node* h = hold->neighbor->neighbor;
+                    prev->neighbor = hold->neighbor;
+                    prev->neighbor->neighbor = hold;
+                    prev->neighbor->neighbor->neighbor = h;
+                    prev = prev->neighbor;
+                    stop = 0;
+                }
+                else{
+                    prev = prev->neighbor;
+                    hold = hold->neighbor;
+                }
+            }
         }
-        temp = temp->neighbor;
+        if (stop == 1)
+            return head;
     }
-    // return head;
+    return head;
 }
 
 int main(){
@@ -105,7 +104,7 @@ int main(){
     h3->data = 2;
 
     node* h4 = (node*)malloc(sizeof(node));
-    h4->data = 3;
+    h4->data = -5;
 
     head->neighbor = h1;
     h1->neighbor = h2;
@@ -116,12 +115,12 @@ int main(){
     printf("Unsorted linked list: \n");
     print_list(head);
 
-    bubble_sort(&head);
+    head = bubble_sort(head);
 
     printf("Sorted linked list: \n");
     print_list(head);
 
-    // printf("Free linked list: \n");
+    printf("Free linked list: \n");
     free_node(head);
 
     return 0;

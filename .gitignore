@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# workspace objects 
+**/.vscode
+
+# Code runner tempo file
+**/tempCodeRunnerFiler*

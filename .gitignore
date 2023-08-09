@@ -55,4 +55,4 @@ dkms.conf
 **/.vscode
 
 # Code runner tempo file
-**/tempCodeRunnerFiler*
+**/tempCodeRunnerFile*

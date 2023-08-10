@@ -58,16 +58,18 @@ unsigned partition(node** head, int pivot){
     unsigned size = count_node(*head);
     unsigned index = 0;
     node* temp = *head;
+
+    if (temp->data > pivot){
+        node* hold = temp->neighbor;
+        temp->neighbor = temp->neighbor->neighbor;
+        hold->neighbor = temp;
+        *head = hold;
+        temp = hold;
+        temp = push_right(temp);
+    }
+
     for(int i = 0 ; i < size-1 ; i++ ){
-        if (temp->data > pivot){
-            node* hold = temp->neighbor;
-            temp->neighbor = temp->neighbor->neighbor;
-            hold->neighbor = temp;
-            *head = hold;
-            temp = hold;
-            temp = push_right(temp);
-        }
-        else if (temp->neighbor->data > pivot){
+        if (temp->neighbor->data > pivot){
             temp = push_right(temp);
         }
         else {
@@ -83,26 +85,45 @@ node* quick_sort(node* head){
     unsigned size = count_node(head);
     if (size > 1){
         unsigned index = partition(&head, head->data);
+        print_list(head);
+        printf("head->data %d with index %d\n", head->data, index);
         node* mid = NULL ;
-        node* it = head;
-        node* hold2 = NULL;
-        for(int i = 0 ; i < index; i++)
-            it = it->neighbor;
+        node* right_of_mid = NULL;
+        node* left_of_mid = NULL;
+        node* it = NULL;
 
-        mid = it->neighbor;
-        if (it->neighbor != NULL)
-            hold2 = it->neighbor->neighbor;
+        if (index == 0){
+            mid = head;
+            right_of_mid = mid->neighbor;
+        }
+        else if (index == 1){
+            left_of_mid = head;
+            mid = head->neighbor;
+            right_of_mid = mid->neighbor;
+        }
+        else{
+            it = head;
+            for(int i = 0 ; i < index-1; i++)
+                it = it->neighbor;
+            mid = it->neighbor;
+            left_of_mid = head;
+            right_of_mid = mid->neighbor;
+        }
 
-        it->neighbor = NULL;
 
-        head = quick_sort(head);
-        hold2 = quick_sort(hold2);
+        left_of_mid = quick_sort(left_of_mid);
+        right_of_mid = quick_sort(right_of_mid);
         
-        it = head;
-        while(it->neighbor != NULL)
-            it = it->neighbor;
-        it->neighbor= mid;
-        mid->neighbor = hold2;
+        if (left_of_mid != NULL){
+            head = left_of_mid;
+            it = left_of_mid;
+            while(it->neighbor != NULL)
+                it = it->neighbor;
+            it->neighbor= mid;
+        }
+        else 
+            head = mid;
+        mid->neighbor = right_of_mid;
     }
     return head;
 }

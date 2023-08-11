@@ -90,12 +90,12 @@ node* merge_sort(node* head){
     unsigned size = count_node(head);
     if (size > 1){
         node* hold = head->neighbor;
-        node* hold2 = head;
+        node* it = head;
         for(unsigned i = 0 ; i < (size/2)-1; i++){
             hold = hold->neighbor;
-            hold2 = hold2->neighbor;
+            it = it->neighbor;
         }
-        hold2->neighbor = NULL;
+        it->neighbor = NULL;
         head = merge_sort(head);
         hold = merge_sort(hold);
         head = merge(head, hold);

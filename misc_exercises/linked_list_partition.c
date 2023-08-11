@@ -26,7 +26,7 @@ void print_list(node* head){
 void free_node(node* head){
     node* temp;
     while(head != NULL){
-        printf("delete node ->data: %d\n", head->data);
+        printf("delte node ->data: %d\n", head->data);
         temp = head->neighbor;
         free(head);
         head = temp;
@@ -42,15 +42,6 @@ unsigned count_node(node* head){
     return count;
 }
 
-int sorted(node*head){
-    while(head->neighbor != NULL){
-        if (head->neighbor->data < head->data)
-            return -1;
-        head = head->neighbor;
-    }
-    return 1;
-}
-
 node* push_right(node* head){
     node* temp = head;
     while (temp->neighbor->neighbor!= NULL){
@@ -63,11 +54,11 @@ node* push_right(node* head){
     return head;
 }
 
-int partition(node** head, int pivot){
+unsigned partition(node** head, int pivot){
     unsigned size = count_node(*head);
-    int index = 0;
+    unsigned index = 0;
     node* temp = *head;
-    for(int i = 0 ; i < size ; i++)
+    for(int i = 0 ; i < size ; i++ )
         if (temp->data >= pivot){
             node* hold = temp->neighbor;
             temp->neighbor = temp->neighbor->neighbor;
@@ -82,7 +73,7 @@ int partition(node** head, int pivot){
     if (index == 0)
         return index;
     temp = *head;
-    for(int i = 0 ; i < size-1 ; i++)
+    for(int i = 0 ; i < size-1 ; i++ )
         if (temp->neighbor->data >= pivot){
             temp = push_right(temp);
         }
@@ -93,52 +84,25 @@ int partition(node** head, int pivot){
     return index;
 }
 
-node* quick_sort(node* head){
-
-    unsigned size = count_node(head);
-
-    if (size > 1){
-        int index = partition(&head, head->data);
-        node* left = head;
-        node* right = NULL;
-
-        for(int i = 0 ; i < index-1; i++)
-            left = left->neighbor;
-
-        right = left->neighbor;
-        left->neighbor = NULL;
-
-        left = quick_sort(head);
-        right = quick_sort(right);
-
-        head = left;
-
-        while (left-> neighbor != NULL)
-            left = left->neighbor;
-        left->neighbor = right;
-    }
-    return head;
-}
-
 int main(){
 
     node* head = (node*)malloc(sizeof(node));
-    head->data = -10;
+    head->data = -1;
     head->neighbor = NULL;
     create_node(head, 5);
-    create_node(head, -2);
-    create_node(head, 20);
+    create_node(head, 5);
     create_node(head, 1);
     create_node(head, 2);
+    create_node(head, 3);
 
     printf("Unsorted linked list: \n");
     print_list(head);
 
-    head = quick_sort(head);
-    if (sorted(head) == -1)
-        printf("Fail: Linked List NOT Sorted.\n");
-    else 
-        printf("Success: Link List Sorted!\n");
+    // int pivot = head->data;
+    int pivot = 4;
+    unsigned index = partition(&head, pivot);
+    printf("Linked List partitioned around element %d in index %d.\n", pivot, index);
+    print_list(head);
 
     printf("Free linked list: \n");
     free_node(head);

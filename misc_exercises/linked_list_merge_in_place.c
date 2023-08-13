@@ -60,6 +60,7 @@ int sorted(node*head){
 }
 
 node* merge(node* one, node* two){
+    
     if (one == NULL || two == NULL)
         return one != NULL ? one : two;
 
@@ -120,9 +121,9 @@ int main(){
 
     node* head = merge(head1, head2);
     if (sorted(head) == -1)
-        printf("Fail: Linked List NOT Sorted.\n");
+        printf("Fail: Linked List NOT Merged.\n");
     else 
-        printf("Success: Link List Sorted!\n");
+        printf("Success: Link List Merged!\n");
 
     printf("Free linked list: \n");
     free_node(head);

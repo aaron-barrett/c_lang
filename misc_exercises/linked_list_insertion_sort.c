@@ -51,18 +51,6 @@ int sorted(node*head){
     return 1;
 }
 
-node* push_right(node* head){
-    node* temp = head;
-    while (temp->neighbor->neighbor!= NULL){
-        node* hold = temp->neighbor->neighbor->neighbor;
-        temp->neighbor->neighbor->neighbor = temp->neighbor;
-        temp->neighbor = temp->neighbor->neighbor;
-        temp->neighbor->neighbor->neighbor = hold;
-        temp = temp->neighbor;
-    }
-    return head;
-}
-
 node* place_left(node* head, int index){
     node* temp = head;
     for(int i = 0 ; i < index - 1; i++)

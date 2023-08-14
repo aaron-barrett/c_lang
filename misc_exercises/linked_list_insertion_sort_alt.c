@@ -51,77 +51,44 @@ int sorted(node*head){
     return 1;
 }
 
-node* push_right(node* head){
-    node* temp = head;
-    while (temp->neighbor->neighbor!= NULL){
-        node* hold = temp->neighbor->neighbor->neighbor;
-        temp->neighbor->neighbor->neighbor = temp->neighbor;
-        temp->neighbor = temp->neighbor->neighbor;
-        temp->neighbor->neighbor->neighbor = hold;
-        temp = temp->neighbor;
-    }
-    return head;
-}
-
-node* place_left(node* head, int index){
-    node* temp = head;
-    for(int i = 0 ; i < index - 1; i++)
-        temp = temp->neighbor;
-    node* h = temp->neighbor;
-    temp->neighbor = NULL;
-    temp = h;
-    node* end = temp->neighbor;
-    temp->neighbor = NULL;
-
-    node* hold = head;
-    if(hold->data > temp->data){
-        node* h = hold;
-        hold = temp;
-        hold->neighbor = h;
-        head = hold;
-    }
-
-    for(int i = 0 ; i < index - 1 ; i++){
-        if(hold->neighbor->data <= temp->data){
-            if(hold->neighbor->neighbor == NULL){
-                hold->neighbor->neighbor = temp;
-                break;
+node* insert_node(node* merged, node* insert){
+    insert->neighbor = NULL;
+    if (merged == NULL)
+        merged = insert;
+    else{
+        node* temp = merged;
+        while(temp->neighbor != NULL && temp->neighbor->data <= insert->data)
+            temp = temp->neighbor;
+        if (temp->neighbor == NULL){
+            if (temp->data <= insert->data){
+                temp->neighbor = insert;
             }
-            else if (hold->neighbor->neighbor->data > temp->data){
-                node* h= hold->neighbor->neighbor;
-                hold->neighbor->neighbor = temp;
-                temp->neighbor = h;
-                break;
+            else{
+                node* hold = merged;
+                merged = insert;
+                insert->neighbor = hold;
             }
-            else 
-                hold=hold->neighbor;
         }
         else{
-            node* h = hold->neighbor;
-            hold->neighbor = temp;
-            temp->neighbor = h;
-            break;
+            node* hold = temp->neighbor;
+            temp->neighbor = insert;
+            insert->neighbor = hold;
         }
     }
-
-    hold = head;
-    while(hold->neighbor != NULL)
-        hold = hold->neighbor;
-    hold->neighbor = end;
-    return head;
+    return merged;
 }
 
 node* insertion_sort(node* head){
-    unsigned size = count_node(head);
-    // Handles base case of comparing the first two elements
-    if (head->data > head->neighbor->data){
-        node* h = head->neighbor->neighbor;
-        head->neighbor->neighbor = head;
-        head->neighbor = h;
+    node* merged = NULL;
+    while (head != NULL){
+        printf("here\n");
+        node* insert = head;
+        head = head->neighbor;
+        merged = insert_node(merged, insert);
+        print_list(merged);
+
     }
-    for(int i = 2 ; i < size ; i++)
-        head = place_left(head, i);
-    return head;
+    return merged;
 }
 
 int main(){
@@ -129,8 +96,8 @@ int main(){
     node* head = (node*)malloc(sizeof(node));
     head->data = -10;
     head->neighbor = NULL;
-    create_node(head, 0);
-    create_node(head, -6);
+    create_node(head, -20);
+    create_node(head, -15);
     create_node(head, 0);
     create_node(head, -2);
     create_node(head, -9);

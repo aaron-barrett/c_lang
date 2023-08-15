@@ -55,25 +55,18 @@ node* insert_node(node* merged, node* insert){
     insert->neighbor = NULL;
     if (merged == NULL)
         merged = insert;
+    else if(merged->data > insert->data){
+        node* hold = merged;
+        merged=insert;
+        merged->neighbor = hold;
+    }
     else{
         node* temp = merged;
         while(temp->neighbor != NULL && temp->neighbor->data <= insert->data)
             temp = temp->neighbor;
-        if (temp->neighbor == NULL){
-            if (temp->data <= insert->data){
-                temp->neighbor = insert;
-            }
-            else{
-                node* hold = merged;
-                merged = insert;
-                insert->neighbor = hold;
-            }
-        }
-        else{
-            node* hold = temp->neighbor;
-            temp->neighbor = insert;
-            insert->neighbor = hold;
-        }
+        node* hold = temp->neighbor;
+        temp->neighbor = insert;
+        insert->neighbor = hold;
     }
     return merged;
 }
@@ -81,12 +74,9 @@ node* insert_node(node* merged, node* insert){
 node* insertion_sort(node* head){
     node* merged = NULL;
     while (head != NULL){
-        printf("here\n");
         node* insert = head;
         head = head->neighbor;
         merged = insert_node(merged, insert);
-        print_list(merged);
-
     }
     return merged;
 }
@@ -99,8 +89,8 @@ int main(){
     create_node(head, -20);
     create_node(head, -15);
     create_node(head, 0);
-    create_node(head, -2);
     create_node(head, -9);
+    create_node(head, -21);
 
     printf("Unsorted linked list: \n");
     print_list(head);

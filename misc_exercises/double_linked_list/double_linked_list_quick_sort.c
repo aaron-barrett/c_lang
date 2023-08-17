@@ -109,7 +109,7 @@ int partition(node** head, int pivot){
 node* quick_sort(node* head){
 
     unsigned size = count_dll(head);
-
+    
     if (size > 1){
         int index = partition(&head, head->data);
         node* left = head;
@@ -152,7 +152,6 @@ int main(){
         printf("Double Linked List NOT Sorted.\n");
     else 
         printf("Double Linked List Sorted!\n");
-
 
     printf("Free Double Linked List:\n");
     free_dll(head);

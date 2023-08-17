@@ -53,7 +53,6 @@ void print_dll(node* head){
     }
 }
 
-
 node* push_right(node* head){
     if (head->n == NULL)
         return head;
@@ -69,7 +68,6 @@ node* push_right(node* head){
         head = head->p;
     return head;
 }
-
 
 int partition(node** head, int pivot){
 
@@ -101,11 +99,12 @@ int partition(node** head, int pivot){
     return index;
 }
 
+
 int main(){
 
     node* head = add_node(NULL, 10);
     head = add_node(head, 5);
-    // head = add_node(head, -1);
+    head = add_node(head, -1);
     head = add_node(head, 10);
 
     printf("Double Linked List:\n");

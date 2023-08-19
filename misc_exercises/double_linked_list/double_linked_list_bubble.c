@@ -61,22 +61,6 @@ int sorted(node* head){
     return 0;
 }
 
-node* push_right(node* head){
-    if (head->n == NULL)
-        return head;
-    node* temp = head;
-    head = head->n;
-    head->p = NULL;
-    while(head->n != NULL)
-        head = head->n;
-    head->n = temp;
-    temp->p = head;
-    temp->n = NULL;
-    while(head->p != NULL)
-        head = head->p;
-    return head;
-}
-
 node* bubble(node* head){
 
     int size = count_dll(head);

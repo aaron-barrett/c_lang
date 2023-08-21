@@ -28,6 +28,16 @@ node* add_node(node* head, int data){
     return head;
 }
 
+int count_dll(node* head){
+    int size = 0 ; 
+    while(head != NULL){
+        head = head->n;
+        size++;
+    }
+    return size;
+}
+
+
 void free_dll(node* head){
     while(head != NULL){
         node* temp = head->n;
@@ -75,6 +85,22 @@ node* create_dll(int count, int inc){
     return head;
 }
 
+node* insert_prev(node* head, node* insert){
+    if(head->p == NULL){
+        head->p = insert;
+        insert->n = head;
+        head = insert;
+    }
+    else{
+        node* hold = head->p;
+        head->p = insert;
+        insert->n = head;
+        insert->p = hold;
+        hold->n = insert;
+    }
+    return insert;
+}
+
 node* insert_next(node* head, node* insert){
     if(head == NULL)
         return insert;
@@ -104,6 +130,29 @@ node* remove_next(node* head){
     return remove;
 }
 
+node* insert_end(node* head, node* insert){
+    node* temp = head;
+    while(temp->n != NULL)
+        temp = temp->n;
+    temp->n = insert;
+    insert->p = temp;
+    return head;
+}
+
+node* insert_middle(node* head, node* insert, int count){
+    int size = count_dll(head);
+    if (count == 0)
+        head = insert_prev(head, insert);
+    else if (count >= size)
+        head = insert_end(head, insert);
+    else{
+        node* temp = head;
+        for(int i = 0 ; i < count-1; i++)
+            temp = temp->n;
+        temp = insert_next(temp, insert);
+    }
+    return head;
+}
 
 int main(){
 
@@ -119,7 +168,7 @@ int main(){
     printf("Insert Node:\n");
     print_dll(insert);
 
-    printf("Double Linked List Insert:\n");
+    printf("Double Linked List Insert Next:\n");
     head = insert_next(head, insert);
     print_dll(head);
     
@@ -129,8 +178,17 @@ int main(){
     printf("Removed Node:\n");
     print_dll(insert);
 
+    printf("Double Linked List Insert Prev:\n");
+    head->n = insert_prev(head->n, insert);
+    print_dll(head);
+
+    node* middle_insert = add_node(NULL, 10000);
+    int insert_index = 1;
+    head = insert_middle(head, middle_insert, insert_index);
+    printf("Double Linked List Insert At Position %d:\n", insert_index);
+    print_dll(head);
+
     free_dll(head);
-    free_dll(insert);
-    
+
     return 0 ;
 }

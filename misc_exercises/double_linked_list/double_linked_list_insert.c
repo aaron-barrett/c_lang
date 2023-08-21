@@ -130,6 +130,7 @@ int main(){
     print_dll(insert);
 
     free_dll(head);
-
+    free_dll(insert);
+    
     return 0 ;
 }

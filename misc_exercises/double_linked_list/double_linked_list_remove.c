@@ -85,63 +85,72 @@ node* create_dll(int count, int inc){
     return head;
 }
 
-node* inser_beginning(node* head, node* insert){
-    insert->n = head;
-    head->p = insert;
-    head = insert;
-    return head;
-}
-
-node* insert_prev(node* head, node* insert){
-    if(head->p == NULL){
-        head->p = insert;
-        insert->n = head;
-        head = insert;
+node* remove_beginning(node** head){
+    node* remove = *head;
+    if((*head)->n != NULL){
+        (*head) =(*head)->n;
+        (*head)->p = NULL;
+        remove->n = NULL;
+        remove->p = NULL;
     }
-    else{
-        node* hold = head->p;
-        head->p = insert;
-        insert->n = head;
-        insert->p = hold;
-        hold->n = insert;
+    return remove;
+}
+
+node* remove_prev(node* head){
+    if(head->p == NULL)
+        return NULL;
+    node* remove = head->p;
+    if (remove->p != NULL){
+        head->p->p->n = head;
+        head->p = head->p->p;
+        remove->n = NULL;
+        remove->p = NULL;
     }
-    return insert;
+    return remove;
 }
 
-node* insert_next(node* head, node* insert){
-    if(head == NULL)
-        return insert;
-    node* temp = head->n;
-    head->n = insert;
-    insert->n = temp;
-    insert->p = head;
-    if(temp != NULL)
-        temp->p = insert;
-    return head;
+node* remove_next(node* head){
+    if (head == NULL)
+        return head;
+    node* remove = head->n;
+    if (remove == NULL)
+        return head;
+    else if (remove->n != NULL){
+        head->n = remove->n;
+        head->n->p = head;
+    }
+    else
+        head->n = NULL;
+    remove->p = NULL;
+    remove->n = NULL;
+    return remove;
 }
 
-node* insert_end(node* head, node* insert){
-    node* temp = head;
-    while(temp->n != NULL)
-        temp = temp->n;
-    temp->n = insert;
-    insert->p = temp;
-    return head;
+node* remove_end(node* head){
+    node* remove = head;
+    while(remove->n != NULL)
+        remove = remove->n;
+    remove->p->n = NULL;
+    remove->p = NULL;
+    return remove;
 }
 
-node* insert_middle(node* head, node* insert, int count){
-    int size = count_dll(head);
-    if (count == 0)
-        head = insert_prev(head, insert);
-    else if (count >= size)
-        head = insert_end(head, insert);
-    else{
-        node* temp = head;
-        for(int i = 0 ; i < count-1; i++)
+node* remove_mid(node** head, int index){
+    int size = count_dll(*head);
+    node* remove = NULL;
+    if (size == 0)
+        return NULL;
+    if (index >= size)
+        remove = remove_end(*head);
+    else if (index == 0)
+        remove = remove_beginning(head);
+    else {
+        node* temp = (*head);
+        for(int i = 0 ; i < index - 1; i++)
             temp = temp->n;
-        temp = insert_next(temp, insert);
+        remove = remove_next(temp);
     }
-    return head;
+    return remove;
 }
 
 int main(){
@@ -150,28 +159,35 @@ int main(){
     head = add_node(head, 8);
     head = add_node(head, 7);
     head = add_node(head, -10);
-
+    head = add_node(head, 100);
 
     printf("Double Linked List:\n");
     print_dll(head);
 
-    node* insert_n = add_node(NULL, -100);
-    printf("Double Linked List Insert Next:\n");
-    head = insert_next(head, insert_n);
+    node* remove_p = remove_prev(head->n->n);
+    printf("Double Linked List Remove Prev:\n");
     print_dll(head);
+    printf("Removed Node:\n");
+    print_dll(remove_p);
 
-    node* insert_p = add_node(NULL, 100);
-    printf("Double Linked List Insert Prev:\n");
-    head->n = insert_prev(head->n, insert_p);
+    node* remove_n = remove_next(head);
+    printf("Double Linked List Remove Next:\n");
     print_dll(head);
+    printf("Removed Node:\n");
+    print_dll(remove_n);
 
-    node* middle_insert = add_node(NULL, 10000);
-    int insert_index = 0;
-    head = insert_middle(head, middle_insert, insert_index);
-    printf("Double Linked List Insert At Position %d:\n", insert_index);
+    int index = 2;
+    node* remove_m = remove_mid(&head,index);
+    printf("Double Linked List Remove at %d:\n", index);
     print_dll(head);
+    printf("Removed Node:\n");
+    print_dll(remove_m);
+
 
     free_dll(head);
+    free_dll(remove_p);
+    free_dll(remove_n);
+    free_dll(remove_m);
 
     return 0 ;
 }

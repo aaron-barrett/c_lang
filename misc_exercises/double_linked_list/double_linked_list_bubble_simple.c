@@ -213,13 +213,12 @@ node* remove_mid(node** head, int index){
 
 node* bubble(node* head){
     int size = count_dll(head);
-    node* temp ;
-    node* remove ;
+    node* temp = NULL;
     for(int i = 0 ; i < size - 1; i++){
         temp = head;
         for(int j = 0 ; j < size - 1 - i ; j++)
             if(temp->data > temp->n->data){
-                remove = remove_next(temp);
+                node* remove = remove_next(temp);
                 insert_prev(temp, remove);
                 if(j==0)
                     head = remove;

@@ -84,7 +84,6 @@ int main(){
     print_list(head);
 
     head = reverse(head);
-
     printf("Reversed Linked List: \n");
     print_list(head);
 

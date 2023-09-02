@@ -34,17 +34,19 @@ void print_permutations(int* array, unsigned index, unsigned size, unsigned* cou
     }
 }
 
+
 int main(){
     unsigned size = 3;
     int* array = gen_array(size);
     printf("Array Before Permutations:\n");
-    print_array(array,size);
+    print_array(array, size);
     printf("\n");
     unsigned count = 0;
+    printf("Permutations:\n");
     print_permutations(array, 0, size, &count);
-    printf("Number of Permutations %d\n", count);
+    printf("\nNumber of Permutations: %d\n", count);
     printf("\nArray After Permutations:\n");
-    print_array(array,size);
+    print_array(array, size);
     free(array);
     return 0;
 }

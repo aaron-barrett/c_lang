@@ -9,9 +9,11 @@ struct stack{
     int top;
 };
 
-void initialize_stack(stack* a){
+stack* init_stack(){
+    stack* a = malloc(sizeof(stack));
     a->data = malloc(sizeof(char)*MAX);
     a->top = -1;
+    return a;
 }
 
 void free_stack(stack* a){
@@ -49,15 +51,13 @@ char pop(stack* a){
 
 int main(){
 
-    stack* a = malloc(sizeof(stack));
-    initialize_stack(a);
+    stack* a = init_stack();
 
     push(a,'k');
     push(a,'c');
     push(a,'a');
     push(a,'t');
     push(a,'s');
-
     print_stack(a);
 
     free_stack(a);

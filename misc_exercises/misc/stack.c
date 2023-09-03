@@ -1,43 +1,65 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define MAX 1000
 
-void push(char* stack, int* top, char data){
-    if(*top == MAX-1){
+typedef struct stack stack;
+struct stack{
+    char* data;
+    int top;
+};
+
+void initialize_stack(stack* a){
+    a->data = malloc(sizeof(char)*MAX);
+    a->top = -1;
+}
+
+void free_stack(stack* a){
+    free(a->data);
+    free(a);
+}
+
+void push(stack*,char);
+char pop(stack*);
+
+void print_stack(stack* a){
+   while(a->top != -1)
+        printf("%c", pop(a));
+}
+
+void push(stack* a, char data){
+    if(a->top == MAX-1){
         printf("Error: Stack is full\n");
         return;
     }
-    (*top)++;
-    stack[*top] = data;
+    a->top = a->top + 1;
+    a->data[a->top] = data;
 }
 
-char pop(char* stack, int* top){
-    if(*top == -1){
+char pop(stack* a){
+    if(a->top == -1){
         printf("Error: Stack is empty.\n");
         return ' ';
     }
-    char data = stack[*top];
-    (*top)--;
+    char data = a->data[a->top];
+    a->top = a->top -1;
     return data;
 }
 
 
-
 int main(){
 
-    char stack[MAX];
-    int top = -1;
+    stack* a = malloc(sizeof(stack));
+    initialize_stack(a);
 
-    push(stack, &top, 'k');
-    push(stack, &top,'c');
-    push(stack, &top,'a');
-    push(stack, &top,'t');
-    push(stack, &top,'s');
+    push(a,'k');
+    push(a,'c');
+    push(a,'a');
+    push(a,'t');
+    push(a,'s');
 
-    while(top != -1)
-        printf("%c", pop(stack, &top));
+    print_stack(a);
 
+    free_stack(a);
     return 0;
 }

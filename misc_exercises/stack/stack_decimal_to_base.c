@@ -24,9 +24,9 @@ void free_stack(stack* a){
     free(a);
 }
 
-void print_stack(stack* a){
+void print_base(stack* a){
    while(a->top != -1)
-        printf("%i ", pop(a));
+        printf("%i", pop(a));
 }
 
 void push(stack* a, int data){
@@ -46,20 +46,21 @@ int pop(stack* a){
     return data;
 }
 
-stack* dec_to_bin(int dec){
+stack* dec_to_bin(int dec, int base){
     stack* bin = init_stack();
     while(dec > 0){
-        push(bin, dec % 2);
-        dec /= 2;
+        push(bin, dec % base);
+        dec /= base;
     }
     return bin;
 }
 
 int main(){
     int dec = 10;
-    stack* a = dec_to_bin(dec);
-    printf("%d in binary:\n", dec);
-    print_stack(a);
+	int base = 3;
+    stack* a = dec_to_bin(dec, base);
+    printf("%d in base %d:\n", dec, base);
+    print_base(a);
     free_stack(a);
     return 0;
 }

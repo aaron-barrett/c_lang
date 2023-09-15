@@ -62,6 +62,7 @@ void parenthesis_permutations(stack* s, int pairs, int pair_count, int ham, int*
     {
         print_stack(s);
         (*total_perms)++;
+        return;
     }
 
     if (pairs + ham > 0)
@@ -77,14 +78,13 @@ void parenthesis_permutations(stack* s, int pairs, int pair_count, int ham, int*
         parenthesis_permutations(s, pairs, pair_count+1, ham+1, total_perms);
         pop(s);
     }
-
 }
 
 
 int main()
 {
     stack* s = init_stack();
-    int dim = 5; 
+    int dim = 2; 
     int count = 0;
     int ham = 0;
     int total = 0;

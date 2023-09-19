@@ -22,16 +22,15 @@ void swap(int* a, int* b)
     *a = *a - *b;
 }
 
-void gnome_sort(int* a, int size )
+void gnome_sort(int* arr, int size )
 {
-    int i = 0; 
-		while (i != size)
-			if (i == 0 || a[i] >= a[i-1])
-				i++;
-			else {
-				swap(&a[i], &a[i-1]);
-				i--;
-			}
+    for(int i = 0 ; i != size ; )
+        if (i == 0 || arr[i] >= arr[i-1])
+            i++;
+        else{
+            swap(&arr[i], &arr[i-1]);
+            i--;
+        }
 }
 
 

@@ -22,29 +22,25 @@ void swap(int* a, int* b)
     *a = *a - *b;
 }
 
-void bubble_sort(int* arr, int size )
+void selection_sort(int* a, int size )
 {
-    int move = 0;
-    for(int i = 0 ; i < size - 1 ; i++)
-    {
-        move = 0;
-        for(int j = 0 ; j < size - 1 - i ; j++)
-            if (arr[j] > arr[j+1])
-            {
-                swap(&arr[j], &arr[j+1]);
-                move = 1;
-            }
-        if (move == 0)
-            break;
-    }
+	int hold;
+	for(int i = 0 ; i < size - 1; i++)
+	{
+		hold = i;
+		for(int j = i + 1 ; j < size ; j++)
+			if (a[j] < a[hold])
+				hold = j;
+		if (hold != i)
+			swap(&a[hold], &a[i]);
+	}
 }
-
 
 int main()
 {
     int arr[] = {500, -1, -5, 3, 1};
     int size = sizeof(arr) / sizeof(arr[0]);
-    bubble_sort(arr, size);
+    selection_sort(arr, size);
     print_arr(arr,size);
     if (sorted(arr,size) == -1)
         printf("NOT Sorted.\n");

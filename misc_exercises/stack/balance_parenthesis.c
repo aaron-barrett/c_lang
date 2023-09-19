@@ -64,14 +64,12 @@ void parenthesis_permutations(stack* s, int pairs, int pair_count, int ham, int*
         (*total_perms)++;
         return;
     }
-
     if (pairs + ham > 0)
     {
         push(s, ')');
         parenthesis_permutations(s, pairs, pair_count, ham-1, total_perms);
         pop(s);
     }
-
     if (ham < 0 && pair_count != pairs)
     {
         push(s, '(');
@@ -84,11 +82,12 @@ void parenthesis_permutations(stack* s, int pairs, int pair_count, int ham, int*
 int main()
 {
     stack* s = init_stack();
-    int dim = 2; 
+    int dim = 3; 
     int count = 0;
     int ham = 0;
     int total = 0;
     parenthesis_permutations(s, dim, count, ham, &total);
+    // catalan number for n = dim
     printf("Total permutations: %d\n", total);
     free_stack(s);
     return 0;

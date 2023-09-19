@@ -22,21 +22,16 @@ void swap(int* a, int* b)
     *a = *a - *b;
 }
 
-void bubble_sort(int* arr, int size )
+void gnome_sort(int* a, int size )
 {
-    int move = 0;
-    for(int i = 0 ; i < size - 1 ; i++)
-    {
-        move = 0;
-        for(int j = 0 ; j < size - 1 - i ; j++)
-            if (arr[j] > arr[j+1])
-            {
-                swap(&arr[j], &arr[j+1]);
-                move = 1;
-            }
-        if (move == 0)
-            break;
-    }
+    int i = 0; 
+		while (i != size)
+			if (i == 0 || a[i] >= a[i-1])
+				i++;
+			else {
+				swap(&a[i], &a[i-1]);
+				i--;
+			}
 }
 
 
@@ -44,7 +39,7 @@ int main()
 {
     int arr[] = {500, -1, -5, 3, 1};
     int size = sizeof(arr) / sizeof(arr[0]);
-    bubble_sort(arr, size);
+    gnome_sort(arr, size);
     print_arr(arr,size);
     if (sorted(arr,size) == -1)
         printf("NOT Sorted.\n");

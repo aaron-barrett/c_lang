@@ -15,7 +15,6 @@ int sorted(int* arr, int size)
     return 0;
 }
 
-
 void swap(int* a, int* b)
 {
     *a = *a + *b;

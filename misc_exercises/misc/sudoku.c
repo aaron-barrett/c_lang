@@ -6,7 +6,7 @@
 int get_sum()
 {
 	int ret = 0 ; 
-	for(int i = 1 ; i < 10 ; i++)
+	for (int i = 1 ; i < 10 ; i++)
 		ret += pow(2, i);
 	return ret;
 }
@@ -14,14 +14,14 @@ int get_sum()
 void print_sudoku(int a[9][9])
 {
 	printf(" ");
-	for(int k = 0 ; k < 23 ; k++)
+	for (int k = 0 ; k < 23 ; k++)
 		printf("-");
 	printf("\n");
-	for(int i = 0 ; i < 9 ; i++)
+	for (int i = 0 ; i < 9 ; i++)
 	{
-		for(int j = 0 ; j < 9; j++)
+		for (int j = 0 ; j < 9; j++)
 		{
-			if (j % 3 == 0  )
+			if (j % 3 == 0)
 				printf("| ");
 			printf("%d ", a[i][j]);
 		}
@@ -29,7 +29,7 @@ void print_sudoku(int a[9][9])
 		if (i % 3 == 2)
 		{
 			printf(" ");
-			for(int k = 0 ; k < 23 ; k++)
+			for (int k = 0 ; k < 23 ; k++)
 				printf("-");
 			printf("\n");
 		}
@@ -41,25 +41,25 @@ int check(int a[9][9])
 {
 	int col = 0; 
 	int row = 0;
-	for(int i = 0 ; i < 9 ; i++)
+	for (int i = 0 ; i < 9 ; i++)
 	{
-		for(int j = 0 ; j < 9 ; j++)
+		for (int j = 0 ; j < 9 ; j++)
 		{
 			row += pow(2,a[i][j]);
 			col += pow(2,a[j][i]);
 		}
 		if (row != SUM || col != SUM)
 			return -1;
-		row = 0 ; 
+		row = 0; 
 		col = 0;
 	}
 
-	int block = 0 ; 
-	for(int i = 0 ; i < 3 ; i++)
-		for(int j = 0 ; j < 3 ; j++)
+	int block = 0; 
+	for (int i = 0 ; i < 3 ; i++)
+		for (int j = 0 ; j < 3 ; j++)
 		{
-			for(int ii = 0 ; ii < 3 ; ii++)
-				for(int jj = 0 ; jj < 3 ; jj++)
+			for (int ii = 0 ; ii < 3 ; ii++)
+				for (int jj = 0 ; jj < 3 ; jj++)
 					block += pow(2, a[i*3 + ii][j*3 + jj]);			
 			if (block != SUM)
 				return -1;
@@ -71,9 +71,9 @@ int check(int a[9][9])
 
 void find_zero(int a[9][9], int* ii, int *jj)
 {
-	for(int i = 0 ; i < 9 ; i++)
-		for(int j = 0 ; j < 9 ; j++)
-			if(a[i][j] == 0)
+	for (int i = 0 ; i < 9 ; i++)
+		for (int j = 0 ; j < 9 ; j++)
+			if (a[i][j] == 0)
 			{
 				*ii = i;
 				*jj = j;
@@ -83,15 +83,15 @@ void find_zero(int a[9][9], int* ii, int *jj)
 
 int check_entry(int a[9][9], int i, int j, int num)
 {
-	for(int k = 0 ; k < 0 ; k++)
+	for (int k = 0 ; k < 0 ; k++)
 		if (a[i][k] == num || a[k][j] == num)
 				return -1;
 	
 	i = (i/3)*3;
 	j = (j/3)*3;
-	for(int ii = 0 ; ii < 3 ; ii++)
-		for(int jj = 0 ; jj < 3 ; jj++)
-			if(a[i + ii][j + jj] == num)
+	for (int ii = 0 ; ii < 3 ; ii++)
+		for (int jj = 0 ; jj < 3 ; jj++)
+			if (a[i + ii][j + jj] == num)
 				return -1;
 	
 	return 0;
@@ -104,13 +104,12 @@ void solve(int a[9][9])
 	if (i+j == -2 && check(a) == 0)
 		return;
 
-	for(int k = 0 ; k < 9 ; k++)
-		if(check_entry(a, i, j, k) == 0)
+	for (int k = 0 ; k < 9 ; k++)
+		if (check_entry(a, i, j, k) == 0)
 	{
 		a[i][j] = k;
 		solve(a);
 	}
-
 }
 
 

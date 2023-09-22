@@ -15,7 +15,8 @@ int sorted(int* arr, int size)
     return 0;
 }
 
-// Note: If a=b, then the result is *a=*b=0. Avoid this.
+// Note: If a=b, then the result is *a=*b=0 for *a=*b=/=0.
+// Check for this.
 void swap(int* a, int* b)
 {
     *a = *a + *b;
@@ -36,7 +37,7 @@ int partition(int* arr, int l, int r)
 
 void quick_sort(int* arr, int l, int r) 
 {
-    if (l-r >= 0)
+    if (r-l < 1)
         return;
     int m = partition(arr, l, r);
     quick_sort(arr, l, m-1);    

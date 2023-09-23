@@ -10,7 +10,7 @@ int main()
 	printf("After Swapping: x = %d, y = %d\n", x, y);
 
 
-    printf("Fails when swaping two pointers with the same address.\n");
+    printf("Fails when swapping two pointers with the same address.\n");
     int z = 10;
 	int* u = &z;
 	int* v = &z;

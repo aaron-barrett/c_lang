@@ -14,7 +14,7 @@ int get_sum()
 void print_sudoku(int a[9][9])
 {
 	printf(" ");
-	for (int k = 0 ; k < 23 ; k++)
+	for (int k = 0 ; k < (3+4)*3+2 ; k++)
 		printf("-");
 	printf("\n");
 	for (int i = 0 ; i < 9 ; i++)
@@ -29,7 +29,7 @@ void print_sudoku(int a[9][9])
 		if (i % 3 == 2)
 		{
 			printf(" ");
-			for (int k = 0 ; k < 23 ; k++)
+			for (int k = 0 ; k < (3+4)*3+2 ; k++)
 				printf("-");
 			printf("\n");
 		}
@@ -45,8 +45,8 @@ int check(int a[9][9])
 	{
 		for (int j = 0 ; j < 9 ; j++)
 		{
-			row += pow(2,a[i][j]);
-			col += pow(2,a[j][i]);
+			row += pow(2, a[i][j]);
+			col += pow(2, a[j][i]);
 		}
 		if (row != SUM || col != SUM)
 			return -1;
@@ -87,8 +87,8 @@ int check_entry(int a[9][9], int i, int j, int num)
 		if (a[i][k] == num || a[k][j] == num)
 				return -1;
 	
-	i = (i/3)*3;
-	j = (j/3)*3;
+	i = (i / 3) * 3;
+	j = (j / 3) * 3;
 	for (int ii = 0 ; ii < 3 ; ii++)
 		for (int jj = 0 ; jj < 3 ; jj++)
 			if (a[i + ii][j + jj] == num)
@@ -97,19 +97,23 @@ int check_entry(int a[9][9], int i, int j, int num)
 	return 0;
 }
 
-void solve(int a[9][9])
+int solve(int a[9][9])
 {
 	int i = -1, j = -1;
 	find_zero(a, &i, &j);
 	if (i+j == -2 && check(a) == 0)
-		return;
+		return 0;
 
 	for (int k = 0 ; k < 9 ; k++)
 		if (check_entry(a, i, j, k) == 0)
-	{
-		a[i][j] = k;
-		solve(a);
-	}
+		{
+			a[i][j] = k;
+			if(solve(a) == 0)
+				return 0;
+			else 
+				a[i][j] = 0;
+		}
+	return -1;
 }
 
 
@@ -129,9 +133,7 @@ int main()
 	{0, 4, 5, 2, 8, 6, 1, 7, 9}
 	};
 
-	solve(a);
-	
-	if (check(a) == 0)
+	if (solve(a) == 0)
 		printf("Solved!\n");
 	else 
 		printf("NOT Solved!\n");

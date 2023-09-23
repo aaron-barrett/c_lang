@@ -85,7 +85,7 @@ int check_entry(int a[9][9], int i, int j, int num)
 {
 	for (int k = 0 ; k < 0 ; k++)
 		if (a[i][k] == num || a[k][j] == num)
-				return -1;
+			return -1;
 	
 	i = (i / 3) * 3;
 	j = (j / 3) * 3;

@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-unsigned trailing_zeros_fact(unsigned n){
+unsigned trailing_zeros_fact(unsigned n)
+{
 	unsigned twos = 0;
 	unsigned fives = 0;
-	for(unsigned i = 1 ; i <= n ; i++){
+	for(unsigned i = 1 ; i <= n ; i++)
+	{
 		if (i % 2 == 0)
 			twos++;
 		if (i % 5 == 0)

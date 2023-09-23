@@ -1,18 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void print_arr(int* arr, int size){
+void print_arr(int* arr, int size)
+{
 	for(int i = 0 ; i < size ; i++)
 		printf("%d ", arr[i]);
 	printf("\n");
 }
 
-void sum_of_two(int* arr, int size, int sum, int indices[2]){
+void sum_of_two(int* arr, int size, int sum, int indices[2])
+{
 	for(int i = 0 ; i < size ; i++)
 		for(int j = i+1 ; j < size; j++)
-			if(arr[i] + arr[j] == sum){
+			if(arr[i] + arr[j] == sum)
+			{
 				indices[0] = i;
 				indices[1] = j;
+				return;
 			}
 }
 

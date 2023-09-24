@@ -12,8 +12,7 @@ void push(char data){
         printf("Error: Stack is full\n");
         return;
     }
-    top++;
-    stack[top] = data;
+    stack[++top] = data;
 }
 
 char pop(){
@@ -21,18 +20,17 @@ char pop(){
         printf("Error: Stack is empty.\n");
         return ' ';
     }
-    char data = stack[top];
-    top--;
+    char data = stack[top--];
     return data;
 }
 
 int is_matching_pair(char a, char b){
     if (a == '(' && b == ')')
-        return 1;
+        return 0;
     if (a == '[' && b == ']')
-        return 1;
+        return 0;
     if (a == '{' && b == '}')
-        return 1;
+        return 0;
     return -1;
 }
 
@@ -42,27 +40,23 @@ int is_balanced(char* text){
         if (text[i] == '(' || text[i] == '[' || text[i] == '{')
             push(text[i]);
         else if (text[i] == ')' || text[i] == ']' || text[i] == '}')
-            if (top == -1)
-                return -1;
-            else if (is_matching_pair(pop(), text[i]) == -1)
+            if (top == -1 || is_matching_pair(pop(), text[i]) == -1)
                 return -1;
                 
-    if (top == -1)
-        return 1;
-    else 
-        return -1;
+    return top == -1 ? 1 : -1;
 }
 
 
 int main(){
 
-    // char* text = "([]){}[[(){}]{}]";
-    char* text = "([]){}[[(){}]{]";
+    char* text = "([]){}[[(){}]{}]";
+    // char* text = "([]){}[[(){}]{]";
+    // char* text = "([]){]";
 
     if(is_balanced(text) == 1)
         printf("Parenthesis are Balanced.\n");
     else 
         printf("Parenthesis are NOT Balanced.\n");
-
+    printf("%s\n", text);
     return 0;
 }

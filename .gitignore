@@ -56,3 +56,6 @@ dkms.conf
 
 # Code runner tempo file
 **/tempCodeRunnerFile*
+
+# Practice Folder
+**/prac/

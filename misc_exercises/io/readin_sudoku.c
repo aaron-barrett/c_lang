@@ -16,7 +16,7 @@ void print_sudoku(int** a, int r)
 		{
 			if (j % rsqrt == 0)
 				printf("| ");
-			printf("%*d ", width, a[i][j]);
+			printf("%-*d ", width, a[i][j]);
 		}
 		printf("|\n");
 		if (i % rsqrt == (rsqrt-1))

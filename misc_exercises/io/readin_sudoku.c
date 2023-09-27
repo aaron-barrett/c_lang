@@ -60,8 +60,10 @@ int** read_in_sudoku(int*** a, int* r, int* c, char* filename)
         for (int j = 0; j < *r; j++)
             if (fscanf(f, "%d", &(*a)[i][j]) != 1)
                 exit(1);
+                
     fclose(f);
 }
+
 
 int main()
 {

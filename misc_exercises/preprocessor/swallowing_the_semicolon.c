@@ -28,5 +28,6 @@ int main()
     else 
         printf("no\n");
 
+    printf("Regular print\n");
     return 0;
 }

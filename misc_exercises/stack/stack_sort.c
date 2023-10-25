@@ -50,16 +50,17 @@ int pop(stack* a){
     return data;
 }
 
-stack* sort_stack(stack* a){
+void sort_stack(stack** a){
     stack* sort = init_stack();
     int temp;
-    while(a->top != -1){
-        temp = pop(a);
+    while((*a)->top != -1){
+        temp = pop(*a);
         while(sort->top != -1 && sort->data[sort->top] > temp)
-            push(a, pop(sort));
+            push(*a, pop(sort));
         push(sort, temp);
     }
-    return sort;
+    free(*a);
+    *a = sort;
 }
 
 
@@ -75,11 +76,10 @@ int main(){
     printf("Unsorted Stack:\n");
     print_stack(a);
     printf("\n");
-    stack* sort = sort_stack(a);
+    sort_stack(&a);
     printf("Sorted stack:\n");
-    print_stack(sort);
+    print_stack(a);
 
     free_stack(a);
-    free_stack(sort);
     return 0;
 }

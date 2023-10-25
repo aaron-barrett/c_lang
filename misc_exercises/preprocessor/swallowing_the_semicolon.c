@@ -28,6 +28,7 @@ int main()
     else 
         printf("no\n");
 
-    printf("Regular print\n");
+    // used to show printing different streams to file; TODO move this elsewhere
+    printf("Success Stream\n");
     return 0;
 }

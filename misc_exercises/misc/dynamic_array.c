@@ -16,6 +16,12 @@ vector* vec_init()
 	return a;
 }
 
+void free_vec(vector* a)
+{
+	free(a->data);
+	free(a);
+}
+
 void print_vec(vector* a)
 {
 	for(unsigned i = 0 ; i < a->size; i++)
@@ -70,5 +76,6 @@ int main()
 	int hold = pop_back(a);
 	printf("After pop_back %d:\n", hold);
 	print_vec(a);
+	free(a);
 	return 0;
 }

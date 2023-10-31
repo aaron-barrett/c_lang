@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 // Ensures first if statement is called
 #define DEBUG "DEFINED"

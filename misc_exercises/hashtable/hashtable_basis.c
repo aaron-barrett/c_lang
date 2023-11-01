@@ -9,7 +9,7 @@ struct item {
     int data;
 };
 
-int hash_key(int data)
+int generate_hash_code(int data)
 {
     return data % MAXHASH;
 }
@@ -38,7 +38,7 @@ void print_hash(item** h)
 
 void add_item(item** h, int data)
 {
-    int key = hash_key(data);
+    int key = generate_hash_code(data);
     if (h[key] == NULL)
     {
         item* new_item =  malloc(sizeof(item));
@@ -52,7 +52,7 @@ void add_item(item** h, int data)
 
 void delete_item(item** h, int data)
 {
-    int key = hash_key(data);
+    int key = generate_hash_code(data);
     if (h[key] != NULL)
     {
         free(h[key]);
@@ -60,6 +60,15 @@ void delete_item(item** h, int data)
     }
     else 
         fprintf(stderr, "Error: No entry with key \"%d\" to delete.\n", key);
+}
+
+void search_item(item** h, int data)
+{
+    int key = generate_hash_code(data);
+    if (h[key] != NULL)
+        printf("Data Found\nData:\t%d \t\tkey:\t%d\n", data, key);
+    else 
+        printf("Data NOT Found\nData:\t%d \t\tkey:\t%d\n", data, key);
 }
 
 
@@ -76,6 +85,9 @@ int main()
     delete_item(hash, 6);
     printf("After delete:\n");
     print_hash(hash);
+    printf("Searching:\n");
+    search_item(hash, 100);
+    search_item(hash, 101);
     free_hash(hash);
     return 0;
 }

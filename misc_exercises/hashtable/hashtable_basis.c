@@ -33,7 +33,7 @@ void print_hash(item** h)
 {
     for (unsigned i = 0 ; i < MAXHASH; i++)
         if ( h[i] != NULL)
-            printf("key:\t%d\t\tdata:\t%d\n", h[i]->key, h[i]->data);
+            printf("data:\t%d\t\tkey:\t%d\n", h[i]->key, h[i]->data);
 }
 
 void add_item(item** h, int data)
@@ -66,9 +66,9 @@ void search_item(item** h, int data)
 {
     int key = generate_hash_code(data);
     if (h[key] != NULL)
-        printf("Data Found\nData:\t%d \t\tkey:\t%d\n", data, key);
+        printf("Data Found\ndata:\t%d\t\tkey:\t%d\n", data, key);
     else 
-        printf("Data NOT Found\nData:\t%d \t\tkey:\t%d\n", data, key);
+        printf("Data NOT Found\ndata:\t%d\t\tkey:\t%d\n", data, key);
 }
 
 

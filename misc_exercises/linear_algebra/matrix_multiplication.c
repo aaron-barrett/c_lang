@@ -40,7 +40,7 @@ void print_matrix(matrix* a)
 	for (unsigned i = 0 ; i < a->rows; i++)
 	{
 		for (unsigned j = 0; j < a->cols; j++)
-			printf("%f ", a->mat[i][j]);
+			printf("%0.2f ", a->mat[i][j]);
 		printf("\n");
 	}
 	printf("\n");

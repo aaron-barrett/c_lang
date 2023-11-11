@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <assert.h>
-#include <time.h>
 #include <limits.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 typedef struct stack stack;
 struct stack
@@ -48,7 +48,7 @@ void push(stack* a, unsigned new_data)
 
 unsigned pop(stack* a)
 {
-	if (a->size == 0 )
+	if (a->size == 0)
 	{
 		fprintf(stderr, "Error: Stack is empty.\n");
 		return 0.0;
@@ -114,7 +114,7 @@ matrix* matrix_init_rand(unsigned rows, unsigned cols)
 {
 	if (srand_call == 0)
 	{
-		srand(100);
+		srand(time(NULL));
 		srand_call = 1;
 	}
 	matrix* a = matrix_init(rows, cols);

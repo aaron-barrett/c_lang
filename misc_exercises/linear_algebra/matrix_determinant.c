@@ -125,18 +125,20 @@ matrix* matrix_init_rand(unsigned rows, unsigned cols)
 }
 
 // Uses the laplace expansion about the first row. 
+// col_s keeps track of which rows have been "skipped" so far. 
+// col_s + row_n explicitly tracks which subdeterminant(s) we are computing.
 double determinant_laplace_computation(matrix* a, unsigned row_n, stack* col_s)
 {
     if (a->rows - row_n == 1)
-		for(int i = 0 ; i < a->cols; i++)
-			if (search(col_s, i) == -1 )
+		for (int i = 0 ; i < a->cols; i++)
+			if (search(col_s, i) == -1)
 				return a->mat[row_n][i];
 
     double determinant = 0.0;
 	// Since we are expanding about the first row, we need only the column count 
 	// We expand about the first row of every submatrix, so restart count for every row.
 	unsigned col_count = -1;
-    for(int i = 0 ; i < a->cols; i++)
+    for (int i = 0 ; i < a->cols; i++)
 		if (search(col_s, i) == -1)
 		{
 			push(col_s,i);

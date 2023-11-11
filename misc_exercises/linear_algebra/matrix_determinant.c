@@ -114,7 +114,7 @@ matrix* matrix_init_rand(unsigned rows, unsigned cols)
 {
 	if (srand_call == 0)
 	{
-		srand(time(NULL));
+		srand(100);
 		srand_call = 1;
 	}
 	matrix* a = matrix_init(rows, cols);
@@ -124,6 +124,7 @@ matrix* matrix_init_rand(unsigned rows, unsigned cols)
 	return a;
 }
 
+// Uses the laplace expansion about the first row. 
 double determinant_laplace_computation(matrix* a, unsigned row_n, stack* col_s)
 {
     if (a->rows - row_n == 1)
@@ -132,6 +133,8 @@ double determinant_laplace_computation(matrix* a, unsigned row_n, stack* col_s)
 				return a->mat[row_n][i];
 
     double determinant = 0.0;
+	// Since we are expanding about the first row, we need only the column count 
+	// We expand about the first row of every submatrix, so restart count for every row.
 	unsigned col_count = -1;
     for(int i = 0 ; i < a->cols; i++)
 		if (search(col_s, i) == -1)

@@ -8,7 +8,7 @@
 typedef struct stack stack;
 struct stack
 {
-	unsigned size ; 
+	unsigned size; 
 	unsigned* data;
 };
 

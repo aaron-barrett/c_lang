@@ -115,6 +115,7 @@ void matrix_fill_col(matrix* a, unsigned col, double entry)
         a->mat[i][col] = entry;
 }
 
+
 int main()
 {
 	unsigned rows_a = 4; 

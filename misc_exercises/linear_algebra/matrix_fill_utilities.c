@@ -86,15 +86,70 @@ matrix* matrix_init_identity_multiple(unsigned rows, unsigned cols, double entry
 	return a;
 }
 
+void matrix_fill_diagonal(matrix* a, int offset_diag, double entry)
+{
+	for (unsigned i = 0 ; i < fmin(a->rows, a->cols); i++)
+		if (offset_diag >= 0)
+			if (i+offset_diag < a->cols)
+				a->mat[i][i+offset_diag] = entry;
+			else 
+				return;
+		else if (offset_diag < 0)
+			if (i - offset_diag < a->rows)
+				a->mat[i - offset_diag][i] = entry;
+			else 
+				return ;
+}
+
+void matrix_fill_row(matrix* a, unsigned row, double entry)
+{
+    assert(row < a->rows && row >= 0);
+    for (unsigned i = 0 ; i < a->cols; i++)
+        a->mat[row][i] = entry;
+}
+
+void matrix_fill_col(matrix* a, unsigned col, double entry)
+{
+    assert(col < a->cols && col >= 0);
+    for (unsigned i = 0 ; i < a->rows; i++)
+        a->mat[i][col] = entry;
+}
 
 int main()
 {
 	unsigned rows_a = 4; 
 	unsigned cols_a = 3;
 
-	matrix* a = matrix_init_identity_multiple(rows_a, cols_a, 2.0);
+	matrix* a = matrix_init(rows_a, cols_a);
 	printf("a = \n");
 	print_matrix(a);
+
+	int fill_diag = 2; 
+	double entry = 10.0;
+	matrix_fill_diagonal(a, fill_diag, entry);
+	printf("offset = %i \nfill value = %0.f\n", fill_diag, entry);
+	printf("a = \n");
+	print_matrix(a);
+
+	fill_diag = -1;
+	entry = -20.0;
+	matrix_fill_diagonal(a, fill_diag, entry);
+	printf("offset = %i \nfill value = %0.f\n", fill_diag, entry);
+	printf("a = \n");
+	print_matrix(a);
+
+    entry = 5.0;
+    unsigned fill_row = 0;
+    matrix_fill_row(a, fill_row, entry);
+    printf("row = %i \nfill value = %0.f\n", fill_row, entry);
+    print_matrix(a); 
+
+    entry = 6.0;
+    unsigned fill_col = 1;
+    matrix_fill_col(a, fill_col, entry);
+    printf("col = %i \nfill value = %0.f\n", fill_col, entry);
+    print_matrix(a); 
+
 
 	free_matrix(a);
 	return 0;

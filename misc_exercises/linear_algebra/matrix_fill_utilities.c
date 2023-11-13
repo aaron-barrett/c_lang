@@ -127,29 +127,28 @@ int main()
 	int fill_diag = 2; 
 	double entry = 10.0;
 	matrix_fill_diagonal(a, fill_diag, entry);
-	printf("offset = %i \nfill value = %0.f\n", fill_diag, entry);
+	printf("diag offset = %i \nfill value = %0.f\n", fill_diag, entry);
 	printf("a = \n");
 	print_matrix(a);
 
 	fill_diag = -1;
 	entry = -20.0;
 	matrix_fill_diagonal(a, fill_diag, entry);
-	printf("offset = %i \nfill value = %0.f\n", fill_diag, entry);
+	printf("diag offset = %i \nfill value = %0.f\n", fill_diag, entry);
 	printf("a = \n");
 	print_matrix(a);
 
     entry = 5.0;
     unsigned fill_row = 0;
     matrix_fill_row(a, fill_row, entry);
-    printf("row = %i \nfill value = %0.f\n", fill_row, entry);
+    printf("fill row = %i \nfill value = %0.f\n", fill_row, entry);
     print_matrix(a); 
 
     entry = 6.0;
     unsigned fill_col = 1;
     matrix_fill_col(a, fill_col, entry);
-    printf("col = %i \nfill value = %0.f\n", fill_col, entry);
+    printf("fill col = %i \nfill value = %0.f\n", fill_col, entry);
     print_matrix(a); 
-
 
 	free_matrix(a);
 	return 0;
